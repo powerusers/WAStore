@@ -21,6 +21,7 @@ export async function StorefrontPage({ tenantSlug }: { tenantSlug: string }) {
       priceCents: true,
       imageUrl: true,
       stock: true,
+      sku: true,
     },
   });
 
