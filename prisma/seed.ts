@@ -14,7 +14,14 @@ async function main() {
   });
 
   const count = await prisma.product.count({ where: { tenantId: tenant.id } });
-  if (count === 0) {
+  
+  // If we have the old 4-product demo, upgrade to the full catalog
+  if (count === 4) {
+    console.log("🔄 Detected old 4-product demo. Upgrading to 70+ product catalog...");
+    await prisma.product.deleteMany({ where: { tenantId: tenant.id } });
+  }
+  
+  if (count === 0 || count === 4) {
     await prisma.product.createMany({
       data: [
         // === STAPLES & GRAINS ===
@@ -560,12 +567,12 @@ async function main() {
         },
       ],
     });
-    console.log(`✅ Seeded ${70} products across multiple categories`);
+    console.log(`✅ Successfully seeded 70+ products across multiple categories`);
   } else {
     console.log(`✅ Database already has ${count} products. Skipping seed.`);
   }
 
-  console.log("Seed complete. Visit http://localhost:3000/demo for the demo store.");
+  console.log("✅ Seed complete. Visit http://localhost:3000/demo or your Railway URL for the demo store.");
 }
 
 main()
