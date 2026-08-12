@@ -8,9 +8,11 @@ async function main() {
     create: {
       slug: "demo",
       name: "Demo Kirana",
-      whatsappNumber: "919876543210",
+      whatsappNumber: "919850524303",
     },
-    update: {},
+    update: {
+      whatsappNumber: "919850524303",
+    },
   });
 
   const count = await prisma.product.count({ where: { tenantId: tenant.id } });

@@ -26,6 +26,7 @@ export function CatalogClient(props: {
   const lines = useCartStore((s) => s.lines);
   const add = useCartStore((s) => s.add);
   const setQty = useCartStore((s) => s.setQty);
+  const clear = useCartStore((s) => s.clear);
   const setTenantSlug = useCartStore((s) => s.setTenantSlug);
   const [mounted, setMounted] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -34,6 +35,8 @@ export function CatalogClient(props: {
   const [categoryId, setCategoryId] = useState("all");
   const [sort, setSort] = useState<SortOption>("popular");
   const [cartOpen, setCartOpen] = useState(false);
+  const [checkoutComplete, setCheckoutComplete] = useState(false);
+  const [whatsappUrl, setWhatsappUrl] = useState<string | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -84,12 +87,33 @@ export function CatalogClient(props: {
           return;
         }
         if (data.url) {
-          window.location.href = data.url;
+          setWhatsappUrl(data.url);
+          setCheckoutComplete(true);
+          setCartOpen(true);
+          window.open(data.url, "_blank", "noopener,noreferrer");
         }
       } catch {
         setError("Network error. Try again.");
       }
     });
+  };
+
+  const handleClearCart = () => {
+    clear();
+    setCheckoutComplete(false);
+    setWhatsappUrl(null);
+    setError(null);
+    setCartOpen(false);
+  };
+
+  const handleCloseCart = () => {
+    setCartOpen(false);
+  };
+
+  const handleOpenWhatsApp = () => {
+    if (whatsappUrl) {
+      window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+    }
   };
 
   const getQuantity = (productId: string) =>
@@ -357,11 +381,13 @@ export function CatalogClient(props: {
           </button>
           <button
             type="button"
-            disabled={!mounted || totalQty === 0 || pending}
-            onClick={() => (totalQty > 0 ? checkout() : setCartOpen(true))}
+            disabled={!mounted || pending || (totalQty === 0 && !checkoutComplete)}
+            onClick={() =>
+              checkoutComplete ? setCartOpen(true) : totalQty > 0 ? checkout() : setCartOpen(true)
+            }
             className="inline-flex min-h-12 shrink-0 items-center justify-center rounded-2xl bg-[#25D366] px-5 text-sm font-bold text-white shadow-lg transition hover:bg-[#1ebe5b] disabled:cursor-not-allowed disabled:opacity-40"
           >
-            {pending ? "…" : "Checkout"}
+            {pending ? "…" : checkoutComplete ? "View order" : "Checkout"}
           </button>
         </div>
       </div>
@@ -373,9 +399,13 @@ export function CatalogClient(props: {
         totalQty={totalQty}
         pending={pending}
         error={error}
-        onClose={() => setCartOpen(false)}
+        checkoutComplete={checkoutComplete}
+        whatsappUrl={whatsappUrl}
+        onClose={handleCloseCart}
         onSetQty={setQty}
         onCheckout={checkout}
+        onClearCart={handleClearCart}
+        onOpenWhatsApp={handleOpenWhatsApp}
       />
     </div>
   );
