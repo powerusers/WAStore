@@ -15,6 +15,8 @@ async function main() {
     },
   });
 
+  console.log(`Demo tenant synced. WhatsApp: ${tenant.whatsappNumber}`);
+
   const count = await prisma.product.count({ where: { tenantId: tenant.id } });
   if (count === 0) {
     await prisma.product.createMany({
