@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import {
+  normalizeCustomerDetails,
+  validateCustomerDetails,
+} from "@/lib/customer-details";
+import {
   buildNumberedWhatsAppMessage,
   buildWhatsAppDeepLink,
   itemsToJsonValue,
@@ -11,6 +15,12 @@ import {
 type Body = {
   tenantSlug?: string;
   lines?: CheckoutLineInput[];
+  customer?: {
+    name?: string;
+    phone?: string;
+    address?: string;
+    notes?: string;
+  };
 };
 
 export async function POST(request: Request) {
@@ -26,6 +36,18 @@ export async function POST(request: Request) {
 
   if (!tenantSlug || lines.length === 0) {
     return NextResponse.json({ error: "tenantSlug and lines are required" }, { status: 400 });
+  }
+
+  const customer = normalizeCustomerDetails({
+    name: body.customer?.name ?? "",
+    phone: body.customer?.phone ?? "",
+    address: body.customer?.address ?? "",
+    notes: body.customer?.notes ?? "",
+  });
+
+  const customerError = validateCustomerDetails(customer);
+  if (customerError) {
+    return NextResponse.json({ error: customerError }, { status: 400 });
   }
 
   const mergedQty = new Map<string, number>();
@@ -94,6 +116,7 @@ export async function POST(request: Request) {
     storeName: tenant.name,
     items: snapshots,
     totalCents,
+    customer,
   });
 
   const order = await prisma.order.create({
@@ -103,6 +126,10 @@ export async function POST(request: Request) {
       whatsappPayload: message,
       itemsJson: itemsToJsonValue(snapshots),
       totalCents,
+      customerName: customer.name,
+      customerPhone: customer.phone,
+      customerAddress: customer.address,
+      customerNotes: customer.notes || null,
     },
   });
 

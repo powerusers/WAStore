@@ -1,4 +1,5 @@
 const RESERVED_FIRST_SEGMENTS = new Set([
+  "admin",
   "api",
   "_next",
   "favicon.ico",

@@ -166,9 +166,10 @@ function AddControls(props: {
       <button
         type="button"
         onClick={onAdd}
-        className={`rounded-xl bg-teal-700 font-semibold text-white shadow-sm transition hover:bg-teal-800 active:scale-95 ${
+        className={`rounded-xl font-semibold text-white shadow-sm transition hover:opacity-90 active:scale-95 ${
           compact ? "w-full px-2 py-1.5 text-xs" : "px-4 py-2 text-xs"
         }`}
+        style={{ backgroundColor: "var(--store-primary, #0f766e)" }}
       >
         Add to cart
       </button>
