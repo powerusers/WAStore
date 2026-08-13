@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { resolveStoreBranding } from "@/lib/store-branding";
 import { CatalogClient } from "@/components/catalog-client";
 
 export async function StorefrontPage({ tenantSlug }: { tenantSlug: string }) {
@@ -25,10 +26,13 @@ export async function StorefrontPage({ tenantSlug }: { tenantSlug: string }) {
     },
   });
 
+  const branding = resolveStoreBranding(tenant);
+
   return (
     <CatalogClient
       tenantSlug={tenant.slug}
       tenantName={tenant.name}
+      branding={branding}
       products={products}
     />
   );

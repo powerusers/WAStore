@@ -1,17 +1,45 @@
 import { PrismaClient } from "@prisma/client";
+import {
+  DEMO_TENANT,
+  PURTI_PRODUCTS,
+  PURTI_TENANT,
+} from "./seed-catalog";
 
 const prisma = new PrismaClient();
 
+async function seedProductsIfEmpty(
+  tenantId: string,
+  products: Array<{
+    name: string;
+    description: string;
+    priceCents: number;
+    sku: string;
+    stock: number;
+  }>,
+) {
+  const count = await prisma.product.count({ where: { tenantId } });
+  if (count === 0) {
+    await prisma.product.createMany({
+      data: products.map((p) => ({ ...p, tenantId })),
+    });
+    console.log(`✅ Seeded ${products.length} products`);
+  } else {
+    console.log(`✅ Tenant already has ${count} products. Skipping product seed.`);
+  }
+}
+
 async function main() {
   const tenant = await prisma.tenant.upsert({
-    where: { slug: "demo" },
-    create: {
-      slug: "demo",
-      name: "Demo Kirana",
-      whatsappNumber: "919850524303",
-    },
+    where: { slug: DEMO_TENANT.slug },
+    create: { ...DEMO_TENANT },
     update: {
-      whatsappNumber: "919850524303",
+      whatsappNumber: DEMO_TENANT.whatsappNumber,
+      name: DEMO_TENANT.name,
+      primaryColor: DEMO_TENANT.primaryColor,
+      tagline: DEMO_TENANT.tagline,
+      deliveryNote: DEMO_TENANT.deliveryNote,
+      heroTitle: DEMO_TENANT.heroTitle,
+      heroSubtitle: DEMO_TENANT.heroSubtitle,
     },
   });
 
@@ -569,7 +597,26 @@ async function main() {
     console.log(`✅ Database already has ${count} products. Skipping seed.`);
   }
 
-  console.log("Seed complete. Visit http://localhost:3000/demo for the demo store.");
+  const purti = await prisma.tenant.upsert({
+    where: { slug: PURTI_TENANT.slug },
+    create: { ...PURTI_TENANT },
+    update: {
+      whatsappNumber: PURTI_TENANT.whatsappNumber,
+      name: PURTI_TENANT.name,
+      primaryColor: PURTI_TENANT.primaryColor,
+      tagline: PURTI_TENANT.tagline,
+      deliveryNote: PURTI_TENANT.deliveryNote,
+      heroTitle: PURTI_TENANT.heroTitle,
+      heroSubtitle: PURTI_TENANT.heroSubtitle,
+    },
+  });
+
+  console.log(`Purti tenant synced. WhatsApp: ${purti.whatsappNumber}`);
+  await seedProductsIfEmpty(purti.id, PURTI_PRODUCTS);
+
+  console.log(
+    "Seed complete. Visit /demo or /purti for demo stores.",
+  );
 }
 
 main()

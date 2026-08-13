@@ -25,6 +25,12 @@ export function buildNumberedWhatsAppMessage(params: {
   storeName: string;
   items: OrderItemSnapshot[];
   totalCents: number;
+  customer?: {
+    name: string;
+    phone: string;
+    address: string;
+    notes?: string;
+  };
 }): string {
   const body = params.items
     .map((item, i) => {
@@ -33,15 +39,28 @@ export function buildNumberedWhatsAppMessage(params: {
     })
     .join("\n");
 
-  return [
-    `*${params.storeName}*`,
-    "",
-    body,
-    "",
+  const lines = [`*${params.storeName}*`, "", "*Order items*", body, ""];
+
+  if (params.customer) {
+    lines.push(
+      "*Customer details*",
+      `Name: ${params.customer.name}`,
+      `Phone: ${params.customer.phone}`,
+      `Address: ${params.customer.address}`,
+    );
+    if (params.customer.notes) {
+      lines.push(`Notes: ${params.customer.notes}`);
+    }
+    lines.push("");
+  }
+
+  lines.push(
     `*Total:* ${formatInrPaise(params.totalCents)}`,
     "",
     "_Please confirm availability & delivery._",
-  ].join("\n");
+  );
+
+  return lines.join("\n");
 }
 
 export function buildWhatsAppDeepLink(phoneDigits: string, message: string): string {

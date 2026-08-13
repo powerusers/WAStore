@@ -12,6 +12,12 @@ model Tenant {
   slug           String    @unique
   name           String
   whatsappNumber String
+  logoUrl        String?
+  primaryColor   String?   @default("#0f766e")
+  tagline        String?
+  deliveryNote   String?
+  heroTitle      String?
+  heroSubtitle   String?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   products       Product[]
@@ -43,6 +49,10 @@ model Order {
   whatsappPayload String?  @db.Text
   itemsJson       Json
   totalCents      Int
+  customerName    String?
+  customerPhone   String?
+  customerAddress String?
+  customerNotes   String?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 

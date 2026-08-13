@@ -12,6 +12,8 @@ import {
   type SortOption,
 } from "@/lib/catalog-utils";
 import { formatInrFromPaise } from "@/lib/format-inr";
+import type { CustomerDetails } from "@/lib/customer-details";
+import { brandingStyleVars, type StoreBranding } from "@/lib/store-branding";
 import { useCartStore } from "@/store/cart-store";
 import { useEffect, useMemo, useState, useTransition } from "react";
 
@@ -20,9 +22,10 @@ export type { CatalogProduct };
 export function CatalogClient(props: {
   tenantSlug: string;
   tenantName: string;
+  branding: StoreBranding;
   products: CatalogProduct[];
 }) {
-  const { tenantSlug, tenantName, products } = props;
+  const { tenantSlug, tenantName, branding, products } = props;
   const lines = useCartStore((s) => s.lines);
   const add = useCartStore((s) => s.add);
   const setQty = useCartStore((s) => s.setQty);
@@ -37,6 +40,7 @@ export function CatalogClient(props: {
   const [cartOpen, setCartOpen] = useState(false);
   const [checkoutComplete, setCheckoutComplete] = useState(false);
   const [whatsappUrl, setWhatsappUrl] = useState<string | null>(null);
+  const [orderId, setOrderId] = useState<string | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -66,7 +70,7 @@ export function CatalogClient(props: {
 
   const showSections = !query && categoryId === "all";
 
-  const checkout = () => {
+  const checkout = (customer: CustomerDetails) => {
     setError(null);
     startTransition(async () => {
       try {
@@ -75,19 +79,25 @@ export function CatalogClient(props: {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             tenantSlug,
+            customer,
             lines: lines.map((l) => ({
               productId: l.productId,
               quantity: l.quantity,
             })),
           }),
         });
-        const data = (await res.json()) as { url?: string; error?: string };
+        const data = (await res.json()) as {
+          url?: string;
+          orderId?: string;
+          error?: string;
+        };
         if (!res.ok) {
           setError(data.error ?? "Checkout failed");
           return;
         }
         if (data.url) {
           setWhatsappUrl(data.url);
+          setOrderId(data.orderId ?? null);
           setCheckoutComplete(true);
           setCartOpen(true);
           window.open(data.url, "_blank", "noopener,noreferrer");
@@ -102,6 +112,7 @@ export function CatalogClient(props: {
     clear();
     setCheckoutComplete(false);
     setWhatsappUrl(null);
+    setOrderId(null);
     setError(null);
     setCartOpen(false);
   };
@@ -129,21 +140,43 @@ export function CatalogClient(props: {
   };
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col pb-24">
+    <div
+      className="flex min-h-0 flex-1 flex-col pb-24"
+      style={brandingStyleVars(branding.primaryColor)}
+    >
       {/* Top bar */}
       <header className="sticky top-0 z-30 border-b border-stone-200/80 bg-white/90 backdrop-blur-xl dark:border-stone-800/80 dark:bg-stone-950/90">
         <div className="mx-auto max-w-6xl px-4 py-3">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-600 to-emerald-700 text-lg font-bold text-white shadow-sm">
-              {tenantName.charAt(0).toUpperCase()}
+            <div
+              className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-2xl text-lg font-bold text-white shadow-sm"
+              style={{ backgroundColor: "var(--store-primary)" }}
+            >
+              {branding.logoUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={branding.logoUrl}
+                  alt=""
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                tenantName.charAt(0).toUpperCase()
+              )}
             </div>
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-bold text-stone-900 dark:text-stone-50">
                 {tenantName}
               </p>
-              <p className="text-xs text-stone-500 dark:text-stone-400">
-                Delivery in 30–45 min · Open now
-              </p>
+              {branding.tagline && (
+                <p className="truncate text-xs text-stone-500 dark:text-stone-400">
+                  {branding.tagline}
+                </p>
+              )}
+              {branding.deliveryNote && (
+                <p className="truncate text-xs text-stone-500 dark:text-stone-400">
+                  {branding.deliveryNote}
+                </p>
+              )}
             </div>
             <button
               type="button"
@@ -153,7 +186,10 @@ export function CatalogClient(props: {
             >
               🛒
               {mounted && totalQty > 0 && (
-                <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-teal-700 px-1 text-[10px] font-bold text-white">
+                <span
+                  className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-[10px] font-bold text-white"
+                  style={{ backgroundColor: "var(--store-primary)" }}
+                >
                   {totalQty}
                 </span>
               )}
@@ -183,30 +219,31 @@ export function CatalogClient(props: {
 
         {/* Hero banner */}
         {showSections && (
-          <section className="mb-6 overflow-hidden rounded-3xl bg-gradient-to-br from-teal-700 via-teal-600 to-emerald-600 p-5 text-white shadow-lg">
+          <section
+            className="mb-6 overflow-hidden rounded-3xl p-5 text-white shadow-lg"
+            style={{ backgroundColor: "var(--store-primary)" }}
+          >
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="space-y-2">
                 <span className="inline-flex rounded-full bg-white/20 px-3 py-1 text-xs font-semibold uppercase tracking-wide backdrop-blur-sm">
-                  Same-day delivery
+                  {branding.deliveryNote ?? "Same-day delivery"}
                 </span>
                 <h1 className="text-2xl font-bold leading-tight sm:text-3xl">
-                  Fresh groceries,
-                  <br />
-                  delivered fast
+                  {branding.heroTitle ?? "Fresh groceries, delivered fast"}
                 </h1>
-                <p className="max-w-md text-sm text-teal-50/90">
-                  Browse {products.length}+ items, add to cart, and place your
-                  order on WhatsApp in seconds.
+                <p className="max-w-md text-sm text-white/90">
+                  {branding.heroSubtitle ??
+                    `Browse ${products.length}+ items and place your order on WhatsApp in seconds.`}
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-2 sm:max-w-xs">
                 <div className="rounded-2xl bg-white/15 p-3 backdrop-blur-sm">
                   <p className="text-2xl font-bold">{products.length}+</p>
-                  <p className="text-xs text-teal-50/80">Products</p>
+                  <p className="text-xs text-white/80">Products</p>
                 </div>
                 <div className="rounded-2xl bg-white/15 p-3 backdrop-blur-sm">
-                  <p className="text-2xl font-bold">₹500+</p>
-                  <p className="text-xs text-teal-50/80">Free delivery</p>
+                  <p className="text-2xl font-bold">WhatsApp</p>
+                  <p className="text-xs text-white/80">Easy checkout</p>
                 </div>
               </div>
             </div>
@@ -225,9 +262,14 @@ export function CatalogClient(props: {
                   onClick={() => setCategoryId(cat.id)}
                   className={`inline-flex shrink-0 items-center gap-1.5 rounded-2xl border px-3.5 py-2 text-sm font-semibold transition ${
                     active
-                      ? "border-teal-700 bg-teal-700 text-white shadow-sm"
-                      : "border-stone-200 bg-white text-stone-700 hover:border-teal-200 hover:bg-teal-50 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-200 dark:hover:border-teal-900 dark:hover:bg-teal-950/40"
+                      ? "border-[color:var(--store-primary)] text-white shadow-sm"
+                      : "border-stone-200 bg-white text-stone-700 hover:bg-stone-50 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-200"
                   }`}
+                  style={
+                    active
+                      ? { backgroundColor: "var(--store-primary)" }
+                      : undefined
+                  }
                 >
                   <span aria-hidden>{cat.emoji}</span>
                   {cat.label}
@@ -332,7 +374,8 @@ export function CatalogClient(props: {
                   setQuery("");
                   setCategoryId("all");
                 }}
-                className="rounded-xl bg-teal-700 px-4 py-2 text-sm font-semibold text-white"
+                className="rounded-xl px-4 py-2 text-sm font-semibold text-white"
+                style={{ backgroundColor: "var(--store-primary)" }}
               >
                 Clear filters
               </button>
@@ -383,7 +426,11 @@ export function CatalogClient(props: {
             type="button"
             disabled={!mounted || pending || (totalQty === 0 && !checkoutComplete)}
             onClick={() =>
-              checkoutComplete ? setCartOpen(true) : totalQty > 0 ? checkout() : setCartOpen(true)
+              checkoutComplete
+                ? setCartOpen(true)
+                : totalQty > 0
+                  ? setCartOpen(true)
+                  : setCartOpen(true)
             }
             className="inline-flex min-h-12 shrink-0 items-center justify-center rounded-2xl bg-[#25D366] px-5 text-sm font-bold text-white shadow-lg transition hover:bg-[#1ebe5b] disabled:cursor-not-allowed disabled:opacity-40"
           >
@@ -400,7 +447,9 @@ export function CatalogClient(props: {
         pending={pending}
         error={error}
         checkoutComplete={checkoutComplete}
+        orderId={orderId}
         whatsappUrl={whatsappUrl}
+        deliveryNote={branding.deliveryNote}
         onClose={handleCloseCart}
         onSetQty={setQty}
         onCheckout={checkout}
