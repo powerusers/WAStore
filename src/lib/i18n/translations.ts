@@ -92,6 +92,13 @@ const messages = {
       "Each store gets its own catalog, branding, and WhatsApp checkout.",
     "home.openStore": "Open store →",
     "lang.toggle": "Language",
+    "install.title": "Install app",
+    "install.addButton": "Add to Home Screen",
+    "install.notNow": "Not now",
+    "install.iosSteps":
+      "Tap the Share button (square with arrow) at the bottom of Safari, then choose “Add to Home Screen”.",
+    "install.androidSteps":
+      "Open the browser menu (⋮) and tap “Add to Home screen” or “Install app”.",
   },
   hi: {
     "nav.trackOrders": "ऑर्डर ट्रैक करें",
@@ -179,6 +186,13 @@ const messages = {
       "हर स्टोर को अपना कैटलॉग, ब्रांडिंग और व्हाट्सऐप चेकआउट मिलता है।",
     "home.openStore": "स्टोर खोलें →",
     "lang.toggle": "भाषा",
+    "install.title": "ऐप इंस्टॉल करें",
+    "install.addButton": "होम स्क्रीन पर जोड़ें",
+    "install.notNow": "अभी नहीं",
+    "install.iosSteps":
+      "Safari में नीचे Share बटन (तीर वाला वर्ग) दबाएं, फिर “Add to Home Screen” चुनें।",
+    "install.androidSteps":
+      "ब्राउज़र मेनू (⋮) खोलें और “Add to Home screen” या “Install app” चुनें।",
   },
 } as const;
 

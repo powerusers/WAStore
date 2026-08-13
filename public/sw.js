@@ -1,5 +1,14 @@
-const CACHE = "wastorefront-v1";
-const PRECACHE = ["/", "/demo", "/manifest.webmanifest", "/icons/icon.svg"];
+const CACHE = "wastorefront-v2";
+const PRECACHE = [
+  "/",
+  "/demo",
+  "/manifest.webmanifest",
+  "/apple-touch-icon.png",
+  "/icons/icon-192.png",
+  "/icons/icon-512.png",
+  "/icons/apple-touch-icon.png",
+  "/icons/icon.svg",
+];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(

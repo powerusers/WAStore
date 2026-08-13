@@ -11,7 +11,20 @@ const outDir = join(root, "public/icons");
 mkdirSync(outDir, { recursive: true });
 const svg = readFileSync(svgPath);
 
-for (const size of [192, 512]) {
-  await sharp(svg).resize(size, size).png().toFile(join(outDir, `icon-${size}.png`));
-  console.log(`Generated icon-${size}.png`);
+const sizes = [
+  { size: 180, name: "apple-touch-icon" },
+  { size: 192, name: "icon-192" },
+  { size: 512, name: "icon-512" },
+];
+
+for (const { size, name } of sizes) {
+  await sharp(svg).resize(size, size).png().toFile(join(outDir, `${name}.png`));
+  console.log(`Generated ${name}.png`);
 }
+
+// iOS also checks the site root for apple-touch-icon.png
+await sharp(svg)
+  .resize(180, 180)
+  .png()
+  .toFile(join(root, "public/apple-touch-icon.png"));
+console.log("Generated public/apple-touch-icon.png");

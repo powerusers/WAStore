@@ -1,10 +1,12 @@
 {
+  "id": "/",
   "name": "WA Storefront",
   "short_name": "Store",
   "description": "Order groceries from your local store on WhatsApp.",
-  "start_url": "/demo",
+  "start_url": "/demo?utm_source=pwa",
   "scope": "/",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
   "orientation": "portrait-primary",
   "background_color": "#fafaf9",
   "theme_color": "#0f766e",
