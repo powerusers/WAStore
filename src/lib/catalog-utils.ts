@@ -1,3 +1,10 @@
+import {
+  getCategoriesForStoreType,
+  getCategoryLabel as getCategoryLabelForStore,
+  type ProductCategory,
+} from "@/lib/catalog-categories";
+import type { StoreType } from "@/lib/store-types";
+
 export type CatalogProduct = {
   id: string;
   name: string;
@@ -6,36 +13,15 @@ export type CatalogProduct = {
   imageUrl: string | null;
   stock: number;
   sku: string | null;
+  requiresPrescription?: boolean;
 };
 
-export type ProductCategory = {
-  id: string;
-  label: string;
-  emoji: string;
-};
+export type { ProductCategory };
+export { getCategoriesForStoreType, getCategoryLabelForStore as getCategoryLabel };
 
-export const ALL_CATEGORY: ProductCategory = {
-  id: "all",
-  label: "All",
-  emoji: "🛍️",
-};
+export const PRODUCT_CATEGORIES = getCategoriesForStoreType("kirana");
 
-export const PRODUCT_CATEGORIES: ProductCategory[] = [
-  ALL_CATEGORY,
-  { id: "staples", label: "Staples", emoji: "🌾" },
-  { id: "pulses", label: "Pulses", emoji: "🥘" },
-  { id: "oils", label: "Oils", emoji: "🛢️" },
-  { id: "dairy", label: "Dairy", emoji: "🥛" },
-  { id: "spices", label: "Spices", emoji: "🌶️" },
-  { id: "beverages", label: "Drinks", emoji: "☕" },
-  { id: "snacks", label: "Snacks", emoji: "🍪" },
-  { id: "care", label: "Care", emoji: "🧴" },
-  { id: "household", label: "Home", emoji: "🧹" },
-  { id: "instant", label: "Instant", emoji: "🍜" },
-  { id: "produce", label: "Fresh", emoji: "🥬" },
-];
-
-const CATEGORY_IMAGES: Record<string, string> = {
+const GROCERY_CATEGORY_IMAGES: Record<string, string> = {
   staples:
     "https://images.unsplash.com/photo-1586201375761-83875001bb04?w=600&h=600&fit=crop&q=80",
   pulses:
@@ -62,12 +48,33 @@ const CATEGORY_IMAGES: Record<string, string> = {
     "https://images.unsplash.com/photo-1542838132-92c53300491e?w=600&h=600&fit=crop&q=80",
 };
 
+const PHARMACY_CATEGORY_IMAGES: Record<string, string> = {
+  "pain-fever":
+    "https://images.unsplash.com/photo-1584308664894-24d4f5fd0f43?w=600&h=600&fit=crop&q=80",
+  "cold-cough":
+    "https://images.unsplash.com/photo-1587854692152-cf400469ba80?w=600&h=600&fit=crop&q=80",
+  vitamins:
+    "https://images.unsplash.com/photo-1550572017-edd951aaee09?w=600&h=600&fit=crop&q=80",
+  digestion:
+    "https://images.unsplash.com/photo-1587854692152-cf400469ba80?w=600&h=600&fit=crop&q=80",
+  skin:
+    "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=600&h=600&fit=crop&q=80",
+  baby:
+    "https://images.unsplash.com/photo-1515488042361-ee00e817b221?w=600&h=600&fit=crop&q=80",
+  "first-aid":
+    "https://images.unsplash.com/photo-1603398939848-5643e7fb7592?w=600&h=600&fit=crop&q=80",
+  wellness:
+    "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&h=600&fit=crop&q=80",
+  default:
+    "https://images.unsplash.com/photo-1576602976037-6e887884b9a8?w=600&h=600&fit=crop&q=80",
+};
+
 function skuPrefix(sku: string | null): string {
   if (!sku) return "";
   return sku.split("-")[0] ?? "";
 }
 
-export function getProductCategoryId(product: CatalogProduct): string {
+function groceryCategoryId(product: CatalogProduct): string {
   const sku = product.sku ?? "";
   const prefix = skuPrefix(sku);
   const name = product.name.toLowerCase();
@@ -93,16 +100,64 @@ export function getProductCategoryId(product: CatalogProduct): string {
   return "default";
 }
 
-export function getProductImage(product: CatalogProduct): string {
-  if (product.imageUrl) return product.imageUrl;
-  const categoryId = getProductCategoryId(product);
-  return CATEGORY_IMAGES[categoryId] ?? CATEGORY_IMAGES.default;
+function pharmacyCategoryId(product: CatalogProduct): string {
+  const sku = product.sku ?? "";
+  const parts = sku.split("-");
+  const category = parts[1] ?? "";
+  const name = product.name.toLowerCase();
+
+  const map: Record<string, string> = {
+    pain: "pain-fever",
+    fever: "pain-fever",
+    cold: "cold-cough",
+    cough: "cold-cough",
+    vit: "vitamins",
+    vitamin: "vitamins",
+    digest: "digestion",
+    skin: "skin",
+    baby: "baby",
+    aid: "first-aid",
+    wellness: "wellness",
+  };
+
+  if (map[category]) return map[category];
+
+  if (name.includes("paracetamol") || name.includes("dolo") || name.includes("crocin"))
+    return "pain-fever";
+  if (name.includes("cough") || name.includes("cold") || name.includes("cetirizine"))
+    return "cold-cough";
+  if (name.includes("vitamin") || name.includes("calcium") || name.includes("zinc"))
+    return "vitamins";
+  if (name.includes("eno") || name.includes("digene") || name.includes("ors"))
+    return "digestion";
+  if (name.includes("cream") || name.includes("lotion") || name.includes("soap"))
+    return "skin";
+  if (name.includes("baby") || name.includes("diaper") || name.includes("pampers"))
+    return "baby";
+  if (name.includes("band") || name.includes("dettol") || name.includes("betadine"))
+    return "first-aid";
+
+  return "wellness";
 }
 
-export function getCategoryLabel(categoryId: string): string {
-  return (
-    PRODUCT_CATEGORIES.find((c) => c.id === categoryId)?.label ?? "Grocery"
-  );
+export function getProductCategoryId(
+  product: CatalogProduct,
+  storeType: StoreType = "kirana",
+): string {
+  return storeType === "pharmacy"
+    ? pharmacyCategoryId(product)
+    : groceryCategoryId(product);
+}
+
+export function getProductImage(
+  product: CatalogProduct,
+  storeType: StoreType = "kirana",
+): string {
+  if (product.imageUrl) return product.imageUrl;
+  const categoryId = getProductCategoryId(product, storeType);
+  const images =
+    storeType === "pharmacy" ? PHARMACY_CATEGORY_IMAGES : GROCERY_CATEGORY_IMAGES;
+  return images[categoryId] ?? images.default;
 }
 
 export type SortOption = "popular" | "price-asc" | "price-desc" | "name";
@@ -113,8 +168,10 @@ export function filterAndSortProducts(
     query: string;
     categoryId: string;
     sort: SortOption;
+    storeType?: StoreType;
   },
 ): CatalogProduct[] {
+  const storeType = options.storeType ?? "kirana";
   const q = options.query.trim().toLowerCase();
 
   let filtered = products.filter((p) => {
@@ -126,7 +183,7 @@ export function filterAndSortProducts(
 
     const matchesCategory =
       options.categoryId === "all" ||
-      getProductCategoryId(p) === options.categoryId;
+      getProductCategoryId(p, storeType) === options.categoryId;
 
     return matchesQuery && matchesCategory;
   });

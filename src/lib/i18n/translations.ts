@@ -12,6 +12,7 @@ const messages = {
     "nav.startStore": "Start your store",
     "nav.admin": "Store admin",
     "search.placeholder": "Search rice, dal, snacks…",
+    "search.placeholderPharmacy": "Search paracetamol, vitamins, cough syrup…",
     "hero.sameDay": "Same-day delivery",
     "hero.products": "Products",
     "hero.whatsapp": "WhatsApp",
@@ -52,6 +53,8 @@ const messages = {
     "cart.phonePlaceholder": "10-digit mobile number",
     "cart.addressPlaceholder": "Flat, street, landmark, city",
     "cart.notesPlaceholder": "Optional instructions",
+    "cart.notesPlaceholderPharmacy":
+      "Other medicines not in catalog, or prescription details",
     "cart.checkoutComplete": "Checkout complete",
     "cart.checkoutCompleteDesc":
       "Your order for {total} is ready. Open WhatsApp to send it to the store, then clear your cart to start a new order.",
@@ -99,6 +102,12 @@ const messages = {
       "Tap the Share button (square with arrow) at the bottom of Safari, then choose “Add to Home Screen”.",
     "install.androidSteps":
       "Open the browser menu (⋮) and tap “Add to Home screen” or “Install app”.",
+    "pharmacy.disclaimerTitle": "OTC catalog + WhatsApp for everything else",
+    "pharmacy.disclaimerBody":
+      "This demo lists common over-the-counter items only. For other medicines, add them in delivery notes or send your prescription on WhatsApp after checkout.",
+    "pharmacy.rxRequired": "Rx",
+    "pharmacy.cartNote":
+      "Send a clear prescription photo on WhatsApp if your order includes prescription-only medicines. The store will confirm availability and price.",
   },
   hi: {
     "nav.trackOrders": "ऑर्डर ट्रैक करें",
@@ -106,6 +115,7 @@ const messages = {
     "nav.startStore": "अपना स्टोर शुरू करें",
     "nav.admin": "स्टोर एडमिन",
     "search.placeholder": "चावल, दाल, स्नैक्स खोजें…",
+    "search.placeholderPharmacy": "पैरासिटामोल, विटामिन, खांसी की दवा खोजें…",
     "hero.sameDay": "उसी दिन डिलीवरी",
     "hero.products": "उत्पाद",
     "hero.whatsapp": "व्हाट्सऐप",
@@ -146,6 +156,8 @@ const messages = {
     "cart.phonePlaceholder": "10 अंकों का मोबाइल नंबर",
     "cart.addressPlaceholder": "फ्लैट, गली, लैंडमार्क, शहर",
     "cart.notesPlaceholder": "वैकल्पिक निर्देश",
+    "cart.notesPlaceholderPharmacy":
+      "कैटलॉग में नहीं दवाएं, या प्रिस्क्रिप्शन विवरण",
     "cart.checkoutComplete": "चेकआउट पूरा",
     "cart.checkoutCompleteDesc":
       "आपका {total} का ऑर्डर तैयार है। व्हाट्सऐप खोलकर स्टोर को भेजें, फिर नया ऑर्डर शुरू करने के लिए कार्ट साफ़ करें।",
@@ -193,6 +205,12 @@ const messages = {
       "Safari में नीचे Share बटन (तीर वाला वर्ग) दबाएं, फिर “Add to Home Screen” चुनें।",
     "install.androidSteps":
       "ब्राउज़र मेनू (⋮) खोलें और “Add to Home screen” या “Install app” चुनें।",
+    "pharmacy.disclaimerTitle": "OTC कैटलॉग + बाकी व्हाट्सऐप पर",
+    "pharmacy.disclaimerBody":
+      "यह डेमो केवल सामान्य OTC उत्पाद दिखाता है। अन्य दवाओं के लिए डिलीवरी नोट में लिखें या चेकआउट के बाद व्हाट्सऐप पर प्रिस्क्रिप्शन भेजें।",
+    "pharmacy.rxRequired": "Rx",
+    "pharmacy.cartNote":
+      "प्रिस्क्रिप्शन दवाओं के लिए व्हाट्सऐप पर साफ़ प्रिस्क्रिप्शन फोटो भेजें। स्टोर उपलब्धता और कीमत की पुष्टि करेगा।",
   },
 } as const;
 

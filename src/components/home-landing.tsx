@@ -20,6 +20,13 @@ const DEMO_STORES = [
     descriptionHi: "30 उत्पादों के साथ दूसरा डेमो स्टोर — बैंगनी ब्रांडिंग।",
     color: "#7c3aed",
   },
+  {
+    slug: "healthplus",
+    name: "HealthPlus Medical",
+    descriptionEn: "Pharmacy demo with 30 OTC items — order on WhatsApp.",
+    descriptionHi: "30 OTC उत्पादों के साथ फार्मेसी डेमो — व्हाट्सऐप पर ऑर्डर करें।",
+    color: "#0284c7",
+  },
 ];
 
 export function HomeLanding() {
@@ -47,7 +54,7 @@ export function HomeLanding() {
         </p>
       </div>
 
-      <div className="grid w-full max-w-2xl gap-4 sm:grid-cols-2">
+      <div className="grid w-full max-w-3xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {DEMO_STORES.map((store) => (
           <Link
             key={store.slug}

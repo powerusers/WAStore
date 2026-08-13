@@ -8,15 +8,16 @@ import { ProductCard } from "@/components/product-card";
 import Link from "next/link";
 import {
   filterAndSortProducts,
+  getCategoriesForStoreType,
   getDealProducts,
   getPopularProducts,
-  PRODUCT_CATEGORIES,
   type CatalogProduct,
   type SortOption,
 } from "@/lib/catalog-utils";
 import { formatInrFromPaise } from "@/lib/format-inr";
 import type { CustomerDetails } from "@/lib/customer-details";
 import { brandingStyleVars, type StoreBranding } from "@/lib/store-branding";
+import { isPharmacyStore, type StoreType } from "@/lib/store-types";
 import { useCartStore } from "@/store/cart-store";
 import { useEffect, useMemo, useState, useTransition } from "react";
 
@@ -25,10 +26,13 @@ export type { CatalogProduct };
 export function CatalogClient(props: {
   tenantSlug: string;
   tenantName: string;
+  storeType: StoreType;
   branding: StoreBranding;
   products: CatalogProduct[];
 }) {
-  const { tenantSlug, tenantName, branding, products } = props;
+  const { tenantSlug, tenantName, storeType, branding, products } = props;
+  const isPharmacy = isPharmacyStore(storeType);
+  const categories = useMemo(() => getCategoriesForStoreType(storeType), [storeType]);
   const { t } = useI18n();
   const lines = useCartStore((s) => s.lines);
   const add = useCartStore((s) => s.add);
@@ -65,8 +69,8 @@ export function CatalogClient(props: {
   );
 
   const filteredProducts = useMemo(
-    () => filterAndSortProducts(products, { query, categoryId, sort }),
-    [products, query, categoryId, sort],
+    () => filterAndSortProducts(products, { query, categoryId, sort, storeType }),
+    [products, query, categoryId, sort, storeType],
   );
 
   const popularProducts = useMemo(() => getPopularProducts(products), [products]);
@@ -219,7 +223,9 @@ export function CatalogClient(props: {
                 type="search"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder={t("search.placeholder")}
+                placeholder={
+                  isPharmacy ? t("search.placeholderPharmacy") : t("search.placeholder")
+                }
                 className="w-full rounded-2xl border border-stone-200 bg-stone-50 py-2.5 pl-10 pr-4 text-sm text-stone-900 outline-none ring-teal-600/30 placeholder:text-stone-400 focus:border-teal-500 focus:ring-2 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-50"
               />
             </label>
@@ -229,6 +235,15 @@ export function CatalogClient(props: {
 
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-4">
         <InstallPrompt />
+
+        {isPharmacy && (
+          <div className="mb-4 rounded-2xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-950 dark:border-sky-900 dark:bg-sky-950/30 dark:text-sky-50">
+            <p className="font-medium">{t("pharmacy.disclaimerTitle")}</p>
+            <p className="mt-1 text-xs leading-relaxed text-sky-900/90 dark:text-sky-100/90">
+              {t("pharmacy.disclaimerBody")}
+            </p>
+          </div>
+        )}
 
         {/* Hero banner */}
         {showSections && (
@@ -266,7 +281,7 @@ export function CatalogClient(props: {
         {/* Category rail */}
         <section className="mb-6">
           <div className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {PRODUCT_CATEGORIES.map((cat) => {
+            {categories.map((cat) => {
               const active = categoryId === cat.id;
               return (
                 <button
@@ -310,6 +325,7 @@ export function CatalogClient(props: {
                 <ProductCard
                   key={p.id}
                   product={p}
+                  storeType={storeType}
                   layout="compact"
                   mounted={mounted}
                   quantity={getQuantity(p.id)}
@@ -337,6 +353,7 @@ export function CatalogClient(props: {
                 <ProductCard
                   key={p.id}
                   product={p}
+                  storeType={storeType}
                   layout="compact"
                   mounted={mounted}
                   quantity={getQuantity(p.id)}
@@ -400,6 +417,7 @@ export function CatalogClient(props: {
                 <li key={p.id}>
                   <ProductCard
                     product={p}
+                    storeType={storeType}
                     mounted={mounted}
                     quantity={getQuantity(p.id)}
                     onAdd={() => handleAdd(p)}
@@ -467,6 +485,7 @@ export function CatalogClient(props: {
         whatsappUrl={whatsappUrl}
         deliveryNote={branding.deliveryNote}
         tenantSlug={tenantSlug}
+        isPharmacy={isPharmacy}
         onClose={handleCloseCart}
         onSetQty={setQty}
         onCheckout={checkout}
