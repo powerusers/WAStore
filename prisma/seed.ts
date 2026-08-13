@@ -1,26 +1,28 @@
 import { PrismaClient } from "@prisma/client";
 import {
   DEMO_TENANT,
+  PHARMACY_PRODUCTS,
+  PHARMACY_TENANT,
   PURTI_PRODUCTS,
   PURTI_TENANT,
+  type ProductSeed,
 } from "./seed-catalog";
 
 const prisma = new PrismaClient();
 
-async function seedProductsIfEmpty(
-  tenantId: string,
-  products: Array<{
-    name: string;
-    description: string;
-    priceCents: number;
-    sku: string;
-    stock: number;
-  }>,
-) {
+async function seedProductsIfEmpty(tenantId: string, products: ProductSeed[]) {
   const count = await prisma.product.count({ where: { tenantId } });
   if (count === 0) {
     await prisma.product.createMany({
-      data: products.map((p) => ({ ...p, tenantId })),
+      data: products.map((p) => ({
+        tenantId,
+        name: p.name,
+        description: p.description,
+        priceCents: p.priceCents,
+        sku: p.sku,
+        stock: p.stock,
+        requiresPrescription: p.requiresPrescription ?? false,
+      })),
     });
     console.log(`✅ Seeded ${products.length} products`);
   } else {
@@ -614,8 +616,26 @@ async function main() {
   console.log(`Purti tenant synced. WhatsApp: ${purti.whatsappNumber}`);
   await seedProductsIfEmpty(purti.id, PURTI_PRODUCTS);
 
+  const healthplus = await prisma.tenant.upsert({
+    where: { slug: PHARMACY_TENANT.slug },
+    create: { ...PHARMACY_TENANT },
+    update: {
+      whatsappNumber: PHARMACY_TENANT.whatsappNumber,
+      name: PHARMACY_TENANT.name,
+      primaryColor: PHARMACY_TENANT.primaryColor,
+      tagline: PHARMACY_TENANT.tagline,
+      deliveryNote: PHARMACY_TENANT.deliveryNote,
+      heroTitle: PHARMACY_TENANT.heroTitle,
+      heroSubtitle: PHARMACY_TENANT.heroSubtitle,
+      storeType: PHARMACY_TENANT.storeType ?? "pharmacy",
+    },
+  });
+
+  console.log(`HealthPlus tenant synced. WhatsApp: ${healthplus.whatsappNumber}`);
+  await seedProductsIfEmpty(healthplus.id, PHARMACY_PRODUCTS);
+
   console.log(
-    "Seed complete. Visit /demo or /purti for demo stores.",
+    "Seed complete. Visit /demo, /purti, or /healthplus for demo stores.",
   );
 }
 

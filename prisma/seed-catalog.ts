@@ -5,6 +5,7 @@ export type ProductSeed = {
   priceCents: number;
   sku: string;
   stock: number;
+  requiresPrescription?: boolean;
 };
 
 export const PURTI_PRODUCTS: ProductSeed[] = [
@@ -230,7 +231,222 @@ export type TenantSeedConfig = {
   deliveryNote: string;
   heroTitle: string;
   heroSubtitle: string;
+  storeType?: "kirana" | "pharmacy";
 };
+
+export const PHARMACY_PRODUCTS: ProductSeed[] = [
+  {
+    name: "Paracetamol 650 mg (15 tablets)",
+    description: "For fever and mild pain relief",
+    priceCents: 3500,
+    sku: "med-pain-paracetamol-650",
+    stock: 120,
+  },
+  {
+    name: "Dolo 650 (15 tablets)",
+    description: "Paracetamol tablets for fever",
+    priceCents: 3200,
+    sku: "med-pain-dolo-650",
+    stock: 100,
+  },
+  {
+    name: "Crocin Advance (20 tablets)",
+    description: "Fast fever and pain relief",
+    priceCents: 4500,
+    sku: "med-pain-crocin-adv",
+    stock: 85,
+  },
+  {
+    name: "Volini Spray 60 g",
+    description: "Topical pain relief spray",
+    priceCents: 18900,
+    sku: "med-pain-volini-60g",
+    stock: 40,
+  },
+  {
+    name: "Moov Pain Relief Cream 50 g",
+    description: "For muscle and joint pain",
+    priceCents: 12900,
+    sku: "med-pain-moov-50g",
+    stock: 55,
+  },
+  {
+    name: "Cetirizine 10 mg (10 tablets)",
+    description: "Allergy and cold relief",
+    priceCents: 2500,
+    sku: "med-cold-cetirizine-10",
+    stock: 90,
+  },
+  {
+    name: "Cheston Cold (10 tablets)",
+    description: "Relief from cold and blocked nose",
+    priceCents: 3900,
+    sku: "med-cold-cheston-10",
+    stock: 70,
+  },
+  {
+    name: "Vicks Vaporub 25 ml",
+    description: "Cough, cold and congestion relief",
+    priceCents: 9900,
+    sku: "med-cough-vicks-25ml",
+    stock: 60,
+  },
+  {
+    name: "Honitus Cough Syrup 100 ml",
+    description: "Ayurvedic cough syrup",
+    priceCents: 11900,
+    sku: "med-cough-honitus-100",
+    stock: 45,
+  },
+  {
+    name: "ORS Electral Powder (5 sachets)",
+    description: "Oral rehydration for dehydration",
+    priceCents: 4500,
+    sku: "med-digest-ors-5",
+    stock: 80,
+  },
+  {
+    name: "Eno Fruit Salt (100 g)",
+    description: "Instant acidity and indigestion relief",
+    priceCents: 8900,
+    sku: "med-digest-eno-100g",
+    stock: 65,
+  },
+  {
+    name: "Digene Tablets (15 tablets)",
+    description: "Antacid for acidity and gas",
+    priceCents: 2900,
+    sku: "med-digest-digene-15",
+    stock: 75,
+  },
+  {
+    name: "Zincovit Tablets (15 tablets)",
+    description: "Multivitamin with minerals",
+    priceCents: 14900,
+    sku: "med-vit-zincovit-15",
+    stock: 50,
+  },
+  {
+    name: "Becosules Capsules (20 capsules)",
+    description: "B-complex with vitamin C",
+    priceCents: 8900,
+    sku: "med-vit-becosules-20",
+    stock: 55,
+  },
+  {
+    name: "Shelcal 500 (15 tablets)",
+    description: "Calcium with vitamin D3",
+    priceCents: 12900,
+    sku: "med-vit-shelcal-15",
+    stock: 48,
+  },
+  {
+    name: "Vitamin C 500 mg (20 tablets)",
+    description: "Immunity support supplement",
+    priceCents: 6900,
+    sku: "med-vit-vitc-20",
+    stock: 60,
+  },
+  {
+    name: "Candid Cream 20 g",
+    description: "Antifungal skin cream",
+    priceCents: 11900,
+    sku: "med-skin-candid-20g",
+    stock: 40,
+  },
+  {
+    name: "Boroplus Antiseptic Cream 40 ml",
+    description: "Moisturising antiseptic cream",
+    priceCents: 7900,
+    sku: "med-skin-boroplus-40",
+    stock: 50,
+  },
+  {
+    name: "Dettol Antiseptic Liquid 100 ml",
+    description: "First-aid antiseptic liquid",
+    priceCents: 6900,
+    sku: "med-aid-dettol-100",
+    stock: 70,
+  },
+  {
+    name: "Band-Aid Washproof (10 strips)",
+    description: "Waterproof adhesive bandages",
+    priceCents: 4500,
+    sku: "med-aid-bandaid-10",
+    stock: 85,
+  },
+  {
+    name: "Betadine Solution 50 ml",
+    description: "Antiseptic for cuts and wounds",
+    priceCents: 14900,
+    sku: "med-aid-betadine-50",
+    stock: 35,
+  },
+  {
+    name: "Digital Thermometer",
+    description: "Fast-read fever thermometer",
+    priceCents: 24900,
+    sku: "med-wellness-thermometer",
+    stock: 25,
+  },
+  {
+    name: "Cotton Roll 100 g",
+    description: "Sterile cotton for first aid",
+    priceCents: 3500,
+    sku: "med-aid-cotton-100g",
+    stock: 60,
+  },
+  {
+    name: "Pampers Baby Diapers M (22 count)",
+    description: "Medium size baby diapers",
+    priceCents: 89900,
+    sku: "med-baby-pampers-m22",
+    stock: 30,
+  },
+  {
+    name: "Johnson's Baby Powder 200 g",
+    description: "Gentle talc-free baby powder",
+    priceCents: 18900,
+    sku: "med-baby-johnson-powder",
+    stock: 40,
+  },
+  {
+    name: "Himalaya Baby Cream 100 ml",
+    description: "Moisturising cream for baby skin",
+    priceCents: 12900,
+    sku: "med-baby-himalaya-cream",
+    stock: 38,
+  },
+  {
+    name: "Lifebuoy Handwash 200 ml",
+    description: "Germ protection handwash",
+    priceCents: 7900,
+    sku: "med-wellness-lifebuoy-200",
+    stock: 55,
+  },
+  {
+    name: "Himalaya Ashvagandha (60 tablets)",
+    description: "Ayurvedic stress and wellness support",
+    priceCents: 19900,
+    sku: "med-wellness-ashwagandha",
+    stock: 28,
+  },
+  {
+    name: "Protinex Original 250 g",
+    description: "Nutritional protein supplement",
+    priceCents: 44900,
+    sku: "med-wellness-protinex-250",
+    stock: 22,
+  },
+  {
+    name: "Metformin 500 mg (10 tablets)",
+    description: "Diabetes medicine — valid prescription required",
+    priceCents: 1500,
+    sku: "med-wellness-metformin-500",
+    stock: 20,
+    requiresPrescription: true,
+  },
+];
 
 export const DEMO_TENANT: TenantSeedConfig = {
   slug: "demo",
@@ -252,4 +468,17 @@ export const PURTI_TENANT: TenantSeedConfig = {
   deliveryNote: "Same-day delivery · 8am–10pm",
   heroTitle: "Everything for your home",
   heroSubtitle: "Snacks, staples, and daily essentials — shop local, shop smart.",
+};
+
+export const PHARMACY_TENANT: TenantSeedConfig = {
+  slug: "healthplus",
+  name: "HealthPlus Medical",
+  whatsappNumber: "919850524303",
+  primaryColor: "#0284c7",
+  tagline: "Your trusted neighbourhood chemist",
+  deliveryNote: "Home delivery · 8am–10pm · OTC items only",
+  heroTitle: "Medicines & wellness, on WhatsApp",
+  heroSubtitle:
+    "Order fast-moving OTC items from our catalog. For other medicines, mention them in notes or send your prescription on WhatsApp.",
+  storeType: "pharmacy",
 };

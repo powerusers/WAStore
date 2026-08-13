@@ -9,20 +9,23 @@ import {
   type CatalogProduct,
 } from "@/lib/catalog-utils";
 
+import type { StoreType } from "@/lib/store-types";
+
 export function ProductCard(props: {
   product: CatalogProduct;
+  storeType?: StoreType;
   quantity: number;
   mounted: boolean;
   layout?: "grid" | "compact";
   onAdd: () => void;
   onSetQty: (q: number) => void;
 }) {
-  const { product, quantity, mounted, layout = "grid", onAdd, onSetQty } = props;
+  const { product, storeType = "kirana", quantity, mounted, layout = "grid", onAdd, onSetQty } = props;
   const { t } = useI18n();
   const outOfStock = product.stock === 0;
   const lowStock = product.stock > 0 && product.stock <= 5;
-  const categoryLabel = getCategoryLabel(getProductCategoryId(product));
-  const image = getProductImage(product);
+  const categoryLabel = getCategoryLabel(getProductCategoryId(product, storeType), storeType);
+  const image = getProductImage(product, storeType);
 
   if (layout === "compact") {
     return (
@@ -39,6 +42,11 @@ export function ProductCard(props: {
           {lowStock && (
             <span className="absolute left-2 top-2 rounded-full bg-amber-500 px-2 py-0.5 text-[10px] font-bold uppercase text-white">
               {t("product.lowStock")}
+            </span>
+          )}
+          {product.requiresPrescription && (
+            <span className="absolute right-2 top-2 rounded-full bg-rose-600 px-2 py-0.5 text-[10px] font-bold uppercase text-white">
+              {t("pharmacy.rxRequired")}
             </span>
           )}
         </div>
@@ -82,6 +90,11 @@ export function ProductCard(props: {
           {lowStock && (
             <span className="rounded-full bg-amber-500 px-2 py-0.5 text-[10px] font-bold uppercase text-white">
               {t("product.lowStock")}
+            </span>
+          )}
+          {product.requiresPrescription && (
+            <span className="rounded-full bg-rose-600 px-2 py-0.5 text-[10px] font-bold uppercase text-white">
+              {t("pharmacy.rxRequired")}
             </span>
           )}
         </div>

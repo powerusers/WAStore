@@ -23,6 +23,7 @@ export function CartDrawer(props: {
   whatsappUrl: string | null;
   deliveryNote: string | null;
   tenantSlug: string;
+  isPharmacy?: boolean;
   onClose: () => void;
   onSetQty: (productId: string, qty: number) => void;
   onCheckout: (customer: CustomerDetails) => void;
@@ -41,6 +42,7 @@ export function CartDrawer(props: {
     whatsappUrl,
     deliveryNote,
     tenantSlug,
+    isPharmacy = false,
     onClose,
     onSetQty,
     onCheckout,
@@ -256,10 +258,19 @@ export function CartDrawer(props: {
                         onChange={(e) =>
                           setCustomer((c) => ({ ...c, notes: e.target.value }))
                         }
-                        placeholder={t("cart.notesPlaceholder")}
+                        placeholder={
+                          isPharmacy
+                            ? t("cart.notesPlaceholderPharmacy")
+                            : t("cart.notesPlaceholder")
+                        }
                         className="w-full rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm dark:border-stone-700 dark:bg-stone-950"
                       />
                     </label>
+                    {isPharmacy && (
+                      <p className="rounded-xl border border-sky-200 bg-sky-50 px-3 py-2 text-xs leading-relaxed text-sky-900 dark:border-sky-900 dark:bg-sky-950/40 dark:text-sky-100">
+                        {t("pharmacy.cartNote")}
+                      </p>
+                    )}
                   </div>
                 </>
               )}
