@@ -119,21 +119,45 @@ export async function POST(request: Request) {
     customer,
   });
 
-  const order = await prisma.order.create({
-    data: {
-      tenantId: tenant.id,
-      status: "intent",
-      whatsappPayload: message,
-      itemsJson: itemsToJsonValue(snapshots),
-      totalCents,
-      customerName: customer.name,
-      customerPhone: customer.phone,
-      customerAddress: customer.address,
-      customerNotes: customer.notes || null,
-    },
-  });
+  try {
+    const order = await prisma.$transaction(async (tx) => {
+      for (const line of normalized) {
+        const updated = await tx.product.updateMany({
+          where: {
+            id: line.productId,
+            tenantId: tenant.id,
+            stock: { gte: line.quantity },
+          },
+          data: { stock: { decrement: line.quantity } },
+        });
+        if (updated.count === 0) {
+          const p = byId.get(line.productId)!;
+          throw new Error(`Insufficient stock for ${p.name}`);
+        }
+      }
 
-  const url = buildWhatsAppDeepLink(tenant.whatsappNumber, message);
+      return tx.order.create({
+        data: {
+          tenantId: tenant.id,
+          status: "intent",
+          whatsappPayload: message,
+          itemsJson: itemsToJsonValue(snapshots),
+          totalCents,
+          customerName: customer.name,
+          customerPhone: customer.phone,
+          customerAddress: customer.address,
+          customerNotes: customer.notes || null,
+        },
+      });
+    });
 
-  return NextResponse.json({ url, orderId: order.id });
+    const url = buildWhatsAppDeepLink(tenant.whatsappNumber, message);
+    return NextResponse.json({ url, orderId: order.id });
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : "Checkout failed";
+    if (msg.includes("Insufficient stock")) {
+      return NextResponse.json({ error: msg }, { status: 400 });
+    }
+    return NextResponse.json({ error: "Checkout failed" }, { status: 500 });
+  }
 }

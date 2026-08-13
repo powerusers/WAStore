@@ -1,6 +1,8 @@
 const RESERVED_FIRST_SEGMENTS = new Set([
   "admin",
   "api",
+  "onboard",
+  "orders",
   "_next",
   "favicon.ico",
   "manifest.webmanifest",

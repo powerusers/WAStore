@@ -2,7 +2,10 @@
 
 import { CartDrawer } from "@/components/cart-drawer";
 import { InstallPrompt } from "@/components/install-prompt";
+import { LocaleToggle } from "@/components/locale-toggle";
+import { useI18n } from "@/components/locale-provider";
 import { ProductCard } from "@/components/product-card";
+import Link from "next/link";
 import {
   filterAndSortProducts,
   getDealProducts,
@@ -26,6 +29,7 @@ export function CatalogClient(props: {
   products: CatalogProduct[];
 }) {
   const { tenantSlug, tenantName, branding, products } = props;
+  const { t } = useI18n();
   const lines = useCartStore((s) => s.lines);
   const add = useCartStore((s) => s.add);
   const setQty = useCartStore((s) => s.setQty);
@@ -178,12 +182,20 @@ export function CatalogClient(props: {
                 </p>
               )}
             </div>
-            <button
-              type="button"
-              onClick={() => setCartOpen(true)}
-              className="relative flex h-10 w-10 items-center justify-center rounded-2xl border border-stone-200 bg-stone-50 text-lg dark:border-stone-700 dark:bg-stone-900"
-              aria-label="Open cart"
-            >
+            <div className="flex items-center gap-2">
+              <Link
+                href={`/${tenantSlug}/orders`}
+                className="hidden rounded-xl border border-stone-200 px-3 py-2 text-xs font-semibold text-stone-700 sm:inline dark:border-stone-700 dark:text-stone-200"
+              >
+                {t("nav.trackOrders")}
+              </Link>
+              <LocaleToggle compact />
+              <button
+                type="button"
+                onClick={() => setCartOpen(true)}
+                className="relative flex h-10 w-10 items-center justify-center rounded-2xl border border-stone-200 bg-stone-50 text-lg dark:border-stone-700 dark:bg-stone-900"
+                aria-label="Open cart"
+              >
               🛒
               {mounted && totalQty > 0 && (
                 <span
@@ -193,7 +205,8 @@ export function CatalogClient(props: {
                   {totalQty}
                 </span>
               )}
-            </button>
+              </button>
+            </div>
           </div>
 
           <div className="mt-3">
@@ -206,7 +219,7 @@ export function CatalogClient(props: {
                 type="search"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search rice, dal, snacks…"
+                placeholder={t("search.placeholder")}
                 className="w-full rounded-2xl border border-stone-200 bg-stone-50 py-2.5 pl-10 pr-4 text-sm text-stone-900 outline-none ring-teal-600/30 placeholder:text-stone-400 focus:border-teal-500 focus:ring-2 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-50"
               />
             </label>
@@ -226,24 +239,24 @@ export function CatalogClient(props: {
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="space-y-2">
                 <span className="inline-flex rounded-full bg-white/20 px-3 py-1 text-xs font-semibold uppercase tracking-wide backdrop-blur-sm">
-                  {branding.deliveryNote ?? "Same-day delivery"}
+                  {branding.deliveryNote ?? t("hero.sameDay")}
                 </span>
                 <h1 className="text-2xl font-bold leading-tight sm:text-3xl">
-                  {branding.heroTitle ?? "Fresh groceries, delivered fast"}
+                  {branding.heroTitle ?? t("section.allProducts")}
                 </h1>
                 <p className="max-w-md text-sm text-white/90">
                   {branding.heroSubtitle ??
-                    `Browse ${products.length}+ items and place your order on WhatsApp in seconds.`}
+                    t("section.itemsFound", { count: products.length })}
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-2 sm:max-w-xs">
                 <div className="rounded-2xl bg-white/15 p-3 backdrop-blur-sm">
                   <p className="text-2xl font-bold">{products.length}+</p>
-                  <p className="text-xs text-white/80">Products</p>
+                  <p className="text-xs text-white/80">{t("hero.products")}</p>
                 </div>
                 <div className="rounded-2xl bg-white/15 p-3 backdrop-blur-sm">
-                  <p className="text-2xl font-bold">WhatsApp</p>
-                  <p className="text-xs text-white/80">Easy checkout</p>
+                  <p className="text-2xl font-bold">{t("hero.whatsapp")}</p>
+                  <p className="text-xs text-white/80">{t("hero.easyCheckout")}</p>
                 </div>
               </div>
             </div>
@@ -285,10 +298,10 @@ export function CatalogClient(props: {
             <div className="mb-3 flex items-end justify-between">
               <div>
                 <h2 className="text-lg font-bold text-stone-900 dark:text-stone-50">
-                  Popular picks
+                  {t("section.popular")}
                 </h2>
                 <p className="text-sm text-stone-500 dark:text-stone-400">
-                  Bestsellers in your neighbourhood
+                  {t("section.popularSub")}
                 </p>
               </div>
             </div>
@@ -313,10 +326,10 @@ export function CatalogClient(props: {
           <section className="mb-8">
             <div className="mb-3 flex items-center gap-2">
               <span className="rounded-full bg-orange-100 px-2.5 py-1 text-xs font-bold uppercase tracking-wide text-orange-700 dark:bg-orange-950/50 dark:text-orange-300">
-                Budget buys
+                {t("section.budget")}
               </span>
               <h2 className="text-lg font-bold text-stone-900 dark:text-stone-50">
-                Under ₹50
+                {t("section.under50")}
               </h2>
             </div>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
@@ -340,24 +353,25 @@ export function CatalogClient(props: {
           <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
             <div>
               <h2 className="text-lg font-bold text-stone-900 dark:text-stone-50">
-                {categoryId === "all" ? "All products" : "Filtered products"}
+                {categoryId === "all" ? t("section.allProducts") : t("section.filtered")}
               </h2>
               <p className="text-sm text-stone-500 dark:text-stone-400">
-                {filteredProducts.length}{" "}
-                {filteredProducts.length === 1 ? "item" : "items"} found
+                {filteredProducts.length === 1
+                  ? t("section.itemFound", { count: filteredProducts.length })
+                  : t("section.itemsFound", { count: filteredProducts.length })}
               </p>
             </div>
             <label className="flex items-center gap-2 text-sm">
-              <span className="text-stone-500 dark:text-stone-400">Sort</span>
+              <span className="text-stone-500 dark:text-stone-400">{t("sort.label")}</span>
               <select
                 value={sort}
                 onChange={(e) => setSort(e.target.value as SortOption)}
                 className="rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm font-medium text-stone-800 outline-none focus:border-teal-500 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-100"
               >
-                <option value="popular">Popular</option>
-                <option value="price-asc">Price: Low to high</option>
-                <option value="price-desc">Price: High to low</option>
-                <option value="name">Name A–Z</option>
+                <option value="popular">{t("sort.popular")}</option>
+                <option value="price-asc">{t("sort.priceAsc")}</option>
+                <option value="price-desc">{t("sort.priceDesc")}</option>
+                <option value="name">{t("sort.name")}</option>
               </select>
             </label>
           </div>
@@ -366,7 +380,7 @@ export function CatalogClient(props: {
             <div className="flex flex-col items-center gap-3 rounded-3xl border border-dashed border-stone-200 bg-stone-50 py-16 text-center dark:border-stone-800 dark:bg-stone-900/40">
               <span className="text-4xl">🔎</span>
               <p className="text-sm font-medium text-stone-700 dark:text-stone-300">
-                No products match your search
+                {t("empty.noProducts")}
               </p>
               <button
                 type="button"
@@ -377,7 +391,7 @@ export function CatalogClient(props: {
                 className="rounded-xl px-4 py-2 text-sm font-semibold text-white"
                 style={{ backgroundColor: "var(--store-primary)" }}
               >
-                Clear filters
+                {t("empty.clearFilters")}
               </button>
             </div>
           ) : (
@@ -414,8 +428,10 @@ export function CatalogClient(props: {
             <div className="min-w-0">
               <p className="text-xs text-stone-500 dark:text-stone-400">
                 {mounted && totalQty > 0
-                  ? `${totalQty} ${totalQty === 1 ? "item" : "items"} in cart`
-                  : "View cart"}
+                  ? totalQty === 1
+                    ? t("cart.oneInCart")
+                    : t("cart.inCart", { count: totalQty })
+                  : t("cart.viewCart")}
               </p>
               <p className="truncate text-base font-bold text-stone-900 dark:text-stone-50">
                 {!mounted ? "—" : formatInrFromPaise(totalCents)}
@@ -434,7 +450,7 @@ export function CatalogClient(props: {
             }
             className="inline-flex min-h-12 shrink-0 items-center justify-center rounded-2xl bg-[#25D366] px-5 text-sm font-bold text-white shadow-lg transition hover:bg-[#1ebe5b] disabled:cursor-not-allowed disabled:opacity-40"
           >
-            {pending ? "…" : checkoutComplete ? "View order" : "Checkout"}
+            {pending ? "…" : checkoutComplete ? t("cart.viewOrder") : t("cart.checkout")}
           </button>
         </div>
       </div>
@@ -450,6 +466,7 @@ export function CatalogClient(props: {
         orderId={orderId}
         whatsappUrl={whatsappUrl}
         deliveryNote={branding.deliveryNote}
+        tenantSlug={tenantSlug}
         onClose={handleCloseCart}
         onSetQty={setQty}
         onCheckout={checkout}
