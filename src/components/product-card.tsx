@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/components/locale-provider";
 import { formatInrFromPaise } from "@/lib/format-inr";
 import {
   getCategoryLabel,
@@ -17,6 +18,7 @@ export function ProductCard(props: {
   onSetQty: (q: number) => void;
 }) {
   const { product, quantity, mounted, layout = "grid", onAdd, onSetQty } = props;
+  const { t } = useI18n();
   const outOfStock = product.stock === 0;
   const lowStock = product.stock > 0 && product.stock <= 5;
   const categoryLabel = getCategoryLabel(getProductCategoryId(product));
@@ -36,7 +38,7 @@ export function ProductCard(props: {
           />
           {lowStock && (
             <span className="absolute left-2 top-2 rounded-full bg-amber-500 px-2 py-0.5 text-[10px] font-bold uppercase text-white">
-              Low
+              {t("product.lowStock")}
             </span>
           )}
         </div>
@@ -55,6 +57,7 @@ export function ProductCard(props: {
             max={product.stock}
             onAdd={onAdd}
             onSetQty={onSetQty}
+            t={t}
           />
         </div>
       </article>
@@ -78,14 +81,14 @@ export function ProductCard(props: {
           </span>
           {lowStock && (
             <span className="rounded-full bg-amber-500 px-2 py-0.5 text-[10px] font-bold uppercase text-white">
-              Low stock
+              {t("product.lowStock")}
             </span>
           )}
         </div>
         {outOfStock && (
           <div className="absolute inset-0 flex items-center justify-center bg-stone-950/55 backdrop-blur-[1px]">
             <span className="rounded-full bg-white px-3 py-1 text-xs font-bold uppercase tracking-wide text-stone-900">
-              Sold out
+              {t("product.soldOut")}
             </span>
           </div>
         )}
@@ -110,7 +113,7 @@ export function ProductCard(props: {
             </p>
             {product.stock > 0 && (
               <p className="text-[11px] text-stone-500 dark:text-stone-400">
-                {product.stock} in stock
+                {t("product.inStock", { count: product.stock })}
               </p>
             )}
           </div>
@@ -121,6 +124,7 @@ export function ProductCard(props: {
             max={product.stock}
             onAdd={onAdd}
             onSetQty={onSetQty}
+            t={t}
           />
         </div>
       </div>
@@ -136,13 +140,14 @@ function AddControls(props: {
   compact?: boolean;
   onAdd: () => void;
   onSetQty: (q: number) => void;
+  t: (key: import("@/lib/i18n/translations").MessageKey, params?: Record<string, string | number>) => string;
 }) {
-  const { mounted, outOfStock, quantity, max, compact, onAdd, onSetQty } = props;
+  const { mounted, outOfStock, quantity, max, compact, onAdd, onSetQty, t } = props;
 
   if (outOfStock) {
     return (
       <span className="rounded-xl bg-stone-100 px-3 py-2 text-xs font-semibold text-stone-400 dark:bg-stone-800">
-        Unavailable
+        {t("product.unavailable")}
       </span>
     );
   }
@@ -156,7 +161,7 @@ function AddControls(props: {
           compact ? "w-full px-2 py-1.5 text-xs" : "px-4 py-2 text-xs"
         }`}
       >
-        Add
+        {t("product.add")}
       </button>
     );
   }
@@ -171,7 +176,7 @@ function AddControls(props: {
         }`}
         style={{ backgroundColor: "var(--store-primary, #0f766e)" }}
       >
-        Add to cart
+        {t("product.addToCart")}
       </button>
     );
   }
