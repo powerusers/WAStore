@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { InstallPrompt } from "@/components/install-prompt";
 import { useI18n } from "@/components/locale-provider";
 import { LocaleToggle } from "@/components/locale-toggle";
 
@@ -28,6 +29,10 @@ export function HomeLanding() {
     <div className="flex flex-1 flex-col items-center gap-10 px-6 py-16">
       <div className="flex w-full max-w-2xl justify-end">
         <LocaleToggle />
+      </div>
+
+      <div className="w-full max-w-lg">
+        <InstallPrompt />
       </div>
 
       <div className="max-w-lg space-y-3 text-center">
