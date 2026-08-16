@@ -5,6 +5,7 @@ import { useI18n } from "@/components/locale-provider";
 import { LocaleToggle } from "@/components/locale-toggle";
 import { formatInrFromPaise } from "@/lib/format-inr";
 import { orderStatusKey } from "@/lib/i18n/translations";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 type OrderRow = {
@@ -24,7 +25,9 @@ export function OrderTrackClient({
   tenantName: string;
 }) {
   const { t } = useI18n();
+  const searchParams = useSearchParams();
   const [phone, setPhone] = useState("");
+  const [orderRef, setOrderRef] = useState(() => searchParams.get("ref") ?? "");
   const [orders, setOrders] = useState<OrderRow[]>([]);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
@@ -37,9 +40,18 @@ export function OrderTrackClient({
     setSearched(true);
     try {
       const digits = phone.replace(/\D/g, "").slice(-10);
-      const res = await fetch(
-        `/api/orders/track?tenantSlug=${encodeURIComponent(tenantSlug)}&phone=${encodeURIComponent(digits)}`,
-      );
+      const ref = orderRef.replace(/[^a-z0-9]/gi, "").slice(-8);
+      if (ref.length < 8) {
+        setError(t("orders.orderRefRequired"));
+        setOrders([]);
+        return;
+      }
+      const params = new URLSearchParams({
+        tenantSlug,
+        phone: digits,
+        orderRef: ref,
+      });
+      const res = await fetch(`/api/orders/track?${params}`);
       const data = (await res.json()) as { orders?: OrderRow[]; error?: string };
       if (!res.ok) throw new Error(data.error ?? "Failed to track orders");
       setOrders(data.orders ?? []);
@@ -70,15 +82,34 @@ export function OrderTrackClient({
       </div>
 
       <form onSubmit={track} className="space-y-3">
-        <input
-          type="tel"
-          inputMode="numeric"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          placeholder={t("orders.phonePlaceholder")}
-          className="w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm dark:border-stone-700 dark:bg-stone-900"
-          required
-        />
+        <label className="block">
+          <span className="mb-1 block text-xs font-medium text-stone-500">
+            {t("orders.orderRef")}
+          </span>
+          <input
+            type="text"
+            value={orderRef}
+            onChange={(e) => setOrderRef(e.target.value.toUpperCase())}
+            placeholder={t("orders.orderRefPlaceholder")}
+            className="w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 font-mono text-sm uppercase tracking-wider dark:border-stone-700 dark:bg-stone-900"
+            required
+            maxLength={12}
+          />
+        </label>
+        <label className="block">
+          <span className="mb-1 block text-xs font-medium text-stone-500">
+            {t("cart.phone")}
+          </span>
+          <input
+            type="tel"
+            inputMode="numeric"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder={t("orders.phonePlaceholder")}
+            className="w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm dark:border-stone-700 dark:bg-stone-900"
+            required
+          />
+        </label>
         <button
           type="submit"
           disabled={loading}

@@ -47,6 +47,7 @@ Open [http://localhost:3000](http://localhost:3000)
 |----------|----------|-------------|
 | `DATABASE_URL` | Yes | PostgreSQL connection string |
 | `ADMIN_SECRET` | Yes (for admin) | Password for `/admin` login |
+| `ALLOW_PUBLIC_ONBOARD` | No | Set `true` to enable `/onboard` in production (off by default) |
 | `NEXT_PUBLIC_ROOT_DOMAIN` | No | Apex domain for subdomain tenants (e.g. `myapp.com`) |
 
 ## Deploy to Railway

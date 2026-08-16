@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 import { OrderTrackClient } from "@/components/order-track-client";
 import { prisma } from "@/lib/prisma";
 
@@ -17,5 +18,9 @@ export default async function OrderTrackPage({ params }: Props) {
     notFound();
   }
 
-  return <OrderTrackClient tenantSlug={tenant.slug} tenantName={tenant.name} />;
+  return (
+    <Suspense fallback={<p className="p-8 text-center text-sm text-stone-500">Loading…</p>}>
+      <OrderTrackClient tenantSlug={tenant.slug} tenantName={tenant.name} />
+    </Suspense>
+  );
 }

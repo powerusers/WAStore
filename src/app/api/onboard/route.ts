@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { isPublicOnboardEnabled } from "@/lib/onboard-access";
 import { prisma } from "@/lib/prisma";
 import {
   normalizeSlug,
@@ -16,6 +17,13 @@ type Body = {
 };
 
 export async function POST(request: Request) {
+  if (!isPublicOnboardEnabled()) {
+    return NextResponse.json(
+      { error: "Public store creation is disabled on this deployment." },
+      { status: 403 },
+    );
+  }
+
   let body: Body;
   try {
     body = (await request.json()) as Body;

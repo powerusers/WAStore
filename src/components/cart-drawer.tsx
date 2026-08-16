@@ -132,7 +132,9 @@ export function CartDrawer(props: {
                   </button>
                 )}
                 <Link
-                  href={`/${tenantSlug}/orders`}
+                  href={`/${tenantSlug}/orders${
+                    orderId ? `?ref=${orderId.slice(-8).toUpperCase()}` : ""
+                  }`}
                   className="flex w-full min-h-12 items-center justify-center rounded-2xl border border-stone-200 bg-stone-50 text-sm font-semibold text-stone-800 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-100"
                 >
                   {t("orders.trackLink")}
