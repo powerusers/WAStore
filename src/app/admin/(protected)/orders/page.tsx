@@ -1,5 +1,6 @@
 "use client";
 
+import { AdminTenantSelect } from "@/components/admin-tenant-select";
 import { formatInrFromPaise } from "@/lib/format-inr";
 import { useCallback, useEffect, useState } from "react";
 
@@ -67,15 +68,11 @@ export default function AdminOrdersPage() {
       </div>
 
       <div className="flex flex-wrap gap-3">
-        <select
+        <AdminTenantSelect
           value={tenantSlug}
-          onChange={(e) => setTenantSlug(e.target.value)}
-          className="rounded-lg border border-stone-200 px-3 py-1.5 text-sm dark:border-stone-700 dark:bg-stone-900"
-        >
-          <option value="">All stores</option>
-          <option value="demo">Demo Kirana</option>
-          <option value="purti">Purti Supermarket</option>
-        </select>
+          onChange={setTenantSlug}
+          includeAll
+        />
         <select
           value={status}
           onChange={(e) => setStatus(e.target.value)}

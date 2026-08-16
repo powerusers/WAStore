@@ -189,7 +189,7 @@ export function CatalogClient(props: {
             <div className="flex items-center gap-2">
               <Link
                 href={`/${tenantSlug}/orders`}
-                className="hidden rounded-xl border border-stone-200 px-3 py-2 text-xs font-semibold text-stone-700 sm:inline dark:border-stone-700 dark:text-stone-200"
+                className="rounded-xl border border-stone-200 px-2.5 py-2 text-xs font-semibold text-stone-700 sm:px-3 dark:border-stone-700 dark:text-stone-200"
               >
                 {t("nav.trackOrders")}
               </Link>

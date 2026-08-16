@@ -1,17 +1,31 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { DEMO_STORES } from "@/lib/demo-stores";
 
 export default async function AdminDashboardPage() {
-  const [tenantCount, productCount, orderCount, recentOrders] = await Promise.all([
-    prisma.tenant.count(),
-    prisma.product.count(),
-    prisma.order.count(),
-    prisma.order.findMany({
-      take: 5,
-      orderBy: { createdAt: "desc" },
-      include: { tenant: { select: { name: true, slug: true } } },
-    }),
-  ]);
+  const [tenantCount, productCount, orderCount, recentOrders, tenants] =
+    await Promise.all([
+      prisma.tenant.count(),
+      prisma.product.count(),
+      prisma.order.count(),
+      prisma.order.findMany({
+        take: 5,
+        orderBy: { createdAt: "desc" },
+        include: { tenant: { select: { name: true, slug: true } } },
+      }),
+      prisma.tenant.findMany({
+        orderBy: { name: "asc" },
+        select: { slug: true, name: true, primaryColor: true, storeType: true },
+      }),
+    ]);
+
+  const demoLinks = DEMO_STORES.map((demo) => {
+    const tenant = tenants.find((t) => t.slug === demo.slug);
+    return {
+      ...demo,
+      color: tenant?.primaryColor ?? demo.color,
+    };
+  });
 
   return (
     <div className="space-y-6">
@@ -24,7 +38,7 @@ export default async function AdminDashboardPage() {
 
       <div className="grid gap-4 sm:grid-cols-3">
         {[
-          { label: "Stores", value: tenantCount, href: "/demo" },
+          { label: "Stores", value: tenantCount, href: "/admin/products" },
           { label: "Products", value: productCount, href: "/admin/products" },
           { label: "Orders", value: orderCount, href: "/admin/orders" },
         ].map((card) => (
@@ -69,20 +83,23 @@ export default async function AdminDashboardPage() {
         )}
       </section>
 
-      <div className="flex flex-wrap gap-3">
-        <Link
-          href="/demo"
-          className="rounded-xl bg-teal-700 px-4 py-2 text-sm font-semibold text-white"
-        >
-          View Demo Kirana
-        </Link>
-        <Link
-          href="/purti"
-          className="rounded-xl bg-violet-600 px-4 py-2 text-sm font-semibold text-white"
-        >
-          View Purti Supermarket
-        </Link>
-      </div>
+      <section className="space-y-3">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-stone-500">
+          Demo storefronts
+        </h2>
+        <div className="flex flex-wrap gap-3">
+          {demoLinks.map((store) => (
+            <Link
+              key={store.slug}
+              href={`/${store.slug}`}
+              className="rounded-xl px-4 py-2 text-sm font-semibold text-white"
+              style={{ backgroundColor: store.color }}
+            >
+              {store.name}
+            </Link>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }
