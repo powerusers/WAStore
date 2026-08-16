@@ -94,6 +94,11 @@ const messages = {
     "home.subtitle":
       "Kirana, supermarket, or pharmacy — each store gets its own catalog, branding, and WhatsApp checkout.",
     "home.demoStores": "Try a demo store",
+    "home.demoStoresSub": "Three live storefronts — kirana, supermarket, and pharmacy",
+    "home.type.kirana": "Kirana",
+    "home.type.supermarket": "Supermarket",
+    "home.type.pharmacy": "Pharmacy",
+    "home.newBadge": "New",
     "home.featureCatalog": "Product catalog with search & categories",
     "home.featureWhatsapp": "One-tap WhatsApp checkout",
     "home.featureAdmin": "Admin panel for orders & stock",
@@ -202,6 +207,11 @@ const messages = {
     "home.subtitle":
       "किराना, सुपरमार्केट या फार्मेसी — हर स्टोर को अपना कैटलॉग, ब्रांडिंग और व्हाट्सऐप चेकआउट मिलता है।",
     "home.demoStores": "डेमो स्टोर आज़माएं",
+    "home.demoStoresSub": "तीन लाइव स्टोर — किराना, सुपरमार्केट और फार्मेसी",
+    "home.type.kirana": "किराना",
+    "home.type.supermarket": "सुपरमार्केट",
+    "home.type.pharmacy": "फार्मेसी",
+    "home.newBadge": "नया",
     "home.featureCatalog": "खोज और श्रेणियों के साथ कैटलॉग",
     "home.featureWhatsapp": "एक टैप में व्हाट्सऐप चेकआउट",
     "home.featureAdmin": "ऑर्डर और स्टॉक के लिए एडमिन",
