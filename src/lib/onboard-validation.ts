@@ -5,6 +5,7 @@ const RESERVED_SLUGS = new Set([
   "orders",
   "demo",
   "purti",
+  "healthplus",
   "www",
   "_next",
 ]);

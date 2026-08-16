@@ -1,5 +1,6 @@
 import { HomeLanding } from "@/components/home-landing";
 import { StorefrontPage } from "@/components/storefront-page";
+import { isPublicOnboardEnabled } from "@/lib/onboard-access";
 import { buildHomeStoreCards } from "@/lib/home-stores";
 import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
@@ -28,5 +29,7 @@ export default async function Home() {
 
   const stores = buildHomeStoreCards(tenants);
 
-  return <HomeLanding stores={stores} />;
+  return (
+    <HomeLanding stores={stores} onboardEnabled={isPublicOnboardEnabled()} />
+  );
 }

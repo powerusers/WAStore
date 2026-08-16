@@ -19,7 +19,13 @@ const STORE_EMOJI: Record<HomeStoreCard["type"], string> = {
   pharmacy: "💊",
 };
 
-export function HomeLanding({ stores }: { stores: HomeStoreCard[] }) {
+export function HomeLanding({
+  stores,
+  onboardEnabled = true,
+}: {
+  stores: HomeStoreCard[];
+  onboardEnabled?: boolean;
+}) {
   const { t, locale } = useI18n();
 
   return (
@@ -135,12 +141,14 @@ export function HomeLanding({ stores }: { stores: HomeStoreCard[] }) {
         </div>
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-          <Link
-            href="/onboard"
-            className="inline-flex min-h-12 items-center justify-center rounded-xl bg-teal-700 px-8 text-sm font-semibold text-white shadow-lg hover:bg-teal-800"
-          >
-            {t("nav.startStore")}
-          </Link>
+          {onboardEnabled && (
+            <Link
+              href="/onboard"
+              className="inline-flex min-h-12 items-center justify-center rounded-xl bg-teal-700 px-8 text-sm font-semibold text-white shadow-lg hover:bg-teal-800"
+            >
+              {t("nav.startStore")}
+            </Link>
+          )}
           <Link
             href="/admin"
             className="inline-flex min-h-12 items-center justify-center rounded-xl border border-stone-200 bg-white px-8 text-sm font-semibold text-stone-700 shadow-sm hover:bg-stone-50 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-200"
