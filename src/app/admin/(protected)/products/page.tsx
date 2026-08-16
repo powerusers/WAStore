@@ -1,5 +1,6 @@
 "use client";
 
+import { AdminTenantSelect } from "@/components/admin-tenant-select";
 import { formatInrFromPaise } from "@/lib/format-inr";
 import { useCallback, useEffect, useState } from "react";
 
@@ -13,12 +14,6 @@ type ProductRow = {
   active: boolean;
   tenant: { slug: string; name: string };
 };
-
-const TENANTS = [
-  { slug: "", label: "All stores" },
-  { slug: "demo", label: "Demo Kirana" },
-  { slug: "purti", label: "Purti Supermarket" },
-];
 
 export default function AdminProductsPage() {
   const [tenantSlug, setTenantSlug] = useState("");
@@ -116,17 +111,13 @@ export default function AdminProductsPage() {
       <div className="flex flex-wrap items-center gap-3">
         <label className="text-sm text-stone-600">
           Filter store
-          <select
-            value={tenantSlug}
-            onChange={(e) => setTenantSlug(e.target.value)}
-            className="ml-2 rounded-lg border border-stone-200 px-3 py-1.5 dark:border-stone-700 dark:bg-stone-900"
-          >
-            {TENANTS.map((t) => (
-              <option key={t.slug} value={t.slug}>
-                {t.label}
-              </option>
-            ))}
-          </select>
+          <span className="ml-2 inline-block">
+            <AdminTenantSelect
+              value={tenantSlug}
+              onChange={setTenantSlug}
+              includeAll
+            />
+          </span>
         </label>
       </div>
 
@@ -137,14 +128,11 @@ export default function AdminProductsPage() {
         <h2 className="sm:col-span-2 text-sm font-semibold text-stone-900 dark:text-stone-50">
           Add product
         </h2>
-        <select
+        <AdminTenantSelect
           value={form.tenantSlug}
-          onChange={(e) => setForm((f) => ({ ...f, tenantSlug: e.target.value }))}
+          onChange={(slug) => setForm((f) => ({ ...f, tenantSlug: slug }))}
           className="rounded-xl border border-stone-200 px-3 py-2 text-sm dark:border-stone-700 dark:bg-stone-950"
-        >
-          <option value="demo">Demo Kirana</option>
-          <option value="purti">Purti Supermarket</option>
-        </select>
+        />
         <input
           placeholder="Product name"
           value={form.name}

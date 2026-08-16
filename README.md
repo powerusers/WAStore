@@ -1,119 +1,89 @@
-# Multi-Tenant Grocery Storefront
+# WA Storefront
 
-A Next.js-based multi-tenant grocery storefront with WhatsApp ordering integration. Each store operates independently with its own products, branding, and WhatsApp number.
+Multi-tenant WhatsApp storefront for Indian local stores — kirana, supermarket, and pharmacy. Each tenant gets its own catalog, branding, checkout flow, and admin tools.
+
+## Demo stores
+
+| Store | URL | Description |
+|-------|-----|-------------|
+| Demo Kirana | `/demo` | 65+ grocery items, teal branding |
+| Purti Supermarket | `/purti` | 30 products, violet branding |
+| HealthPlus Medical | `/healthplus` | 30 OTC pharmacy items, blue branding |
+
+Also try:
+- **Home:** `/` — demo store picker + feature overview
+- **Onboarding:** `/onboard` — create a new store in minutes
+- **Admin:** `/admin` — manage products and orders (requires `ADMIN_SECRET`)
+- **Order tracking:** `/{store}/orders` — lookup by phone number
 
 ## Features
 
-- 🏪 Multi-tenant architecture (subdomain or path-based routing)
-- 🛒 Product catalog with stock management
-- 📱 WhatsApp order integration
-- 🎨 Modern, responsive UI built with Tailwind CSS
-- 💾 PostgreSQL database with Prisma ORM
-- 🚀 Optimized for Railway deployment
+- Multi-tenant routing (path-based on Railway, subdomain optional)
+- Product catalog with search, categories, popular/deals sections
+- Cart drawer with customer details (name, phone, address)
+- WhatsApp checkout with pre-filled order message
+- Per-store branding (color, tagline, hero copy)
+- Hindi / English language toggle
+- Pharmacy mode with OTC disclaimer and prescription notes
+- PWA support (install prompt + service worker)
+- Admin panel for product CRUD and order status
+- Self-serve store onboarding
 
-## Quick Start
+## Quick start (local)
 
-### Local Development
+```bash
+npm install
+cp .env.example .env   # set DATABASE_URL and ADMIN_SECRET
+npm run db:deploy
+npm run db:seed
+npm run dev
+```
 
-1. **Clone and install dependencies:**
-   ```bash
-   npm install
-   ```
+Open [http://localhost:3000](http://localhost:3000)
 
-2. **Set up environment variables:**
-   ```bash
-   cp .env.example .env
-   ```
-   Edit `.env` and add your PostgreSQL `DATABASE_URL`
+## Environment variables
 
-3. **Set up database:**
-   ```bash
-   npm run db:deploy  # Run migrations
-   npm run db:seed    # Seed with demo store
-   ```
-
-4. **Start development server:**
-   ```bash
-   npm run dev
-   ```
-
-5. **Visit the demo store:**
-   - Home: [http://localhost:3000](http://localhost:3000)
-   - Demo store: [http://localhost:3000/demo](http://localhost:3000/demo)
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `DATABASE_URL` | Yes | PostgreSQL connection string |
+| `ADMIN_SECRET` | Yes (for admin) | Password for `/admin` login |
+| `NEXT_PUBLIC_ROOT_DOMAIN` | No | Apex domain for subdomain tenants (e.g. `myapp.com`) |
 
 ## Deploy to Railway
 
-See [RAILWAY_DEPLOYMENT.md](./RAILWAY_DEPLOYMENT.md) for a complete deployment guide.
+See [RAILWAY_DEPLOYMENT.md](./RAILWAY_DEPLOYMENT.md).
 
-**Quick steps:**
-1. Push code to GitHub
-2. Create new Railway project from your repo
-3. Add PostgreSQL database
-4. Deploy (automatic setup runs on first deploy)
-5. Access your app at `https://your-app.railway.app/demo`
+On every deploy, `npm start` runs migrations and syncs demo seed data automatically.
 
-## Tenant Resolution
+**Before a client demo:**
+1. Set `ADMIN_SECRET` in Railway variables
+2. Redeploy from latest `main`
+3. Visit `/demo` and confirm 65+ products
+4. Pre-stage one order and update its status in admin for the tracking demo
 
-### Path-based (Default for Railway & localhost)
-When `NEXT_PUBLIC_ROOT_DOMAIN` is not set:
-- `/demo` → demo store
-- `/purti` → purti store
+## Suggested demo flow
 
-### Subdomain-based (Custom domains)
-When you set `NEXT_PUBLIC_ROOT_DOMAIN=myapp.com`:
-- `demo.myapp.com` → demo store
-- `purti.myapp.com` → purti store
+1. Home → pick a demo store
+2. Search / browse → add to cart → checkout with phone number
+3. WhatsApp opens with order details
+4. Admin → update order status
+5. `/{store}/orders` → track with same phone number
+6. Show `/healthplus` for pharmacy variant
+7. Toggle Hindi on the storefront
 
-## Database Schema
+## Tech stack
 
-- **Tenant**: Stores (slug, name, whatsappNumber)
-- **Product**: Products per store (name, price, stock, etc.)
-- **Order**: Customer orders with WhatsApp payload
-
-## Tech Stack
-
-- [Next.js 15](https://nextjs.org/) - React framework
-- [Prisma](https://www.prisma.io/) - Database ORM
-- [PostgreSQL](https://www.postgresql.org/) - Database
-- [Tailwind CSS 4](https://tailwindcss.com/) - Styling
-- [Zustand](https://github.com/pmndrs/zustand) - State management
-- [TypeScript](https://www.typescriptlang.org/) - Type safety
+Next.js 15 · React 19 · Prisma · PostgreSQL · Tailwind CSS 4 · Zustand · TypeScript
 
 ## Scripts
 
 | Script | Description |
 |--------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production |
-| `npm start` | Start production server (with auto-setup) |
-| `npm run db:seed` | Seed database with demo data |
-| `npm run db:studio` | Open Prisma Studio (database UI) |
-
-## Project Structure
-
-```
-├── src/
-│   ├── app/
-│   │   ├── page.tsx              # Landing page
-│   │   ├── [tenantSlug]/         # Tenant-specific routes
-│   │   │   └── page.tsx          # Storefront page
-│   │   └── api/                  # API routes
-│   ├── components/               # React components
-│   ├── lib/                      # Utilities & configs
-│   └── middleware.ts             # Tenant resolution middleware
-├── prisma/
-│   ├── schema.prisma             # Database schema
-│   ├── seed.ts                   # Seed data
-│   └── migrations/               # Database migrations
-└── scripts/
-    └── init-and-start.sh         # Production initialization script
-```
-
-## Learn More
-
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Prisma Documentation](https://www.prisma.io/docs)
-- [Railway Documentation](https://docs.railway.app)
+| `npm run dev` | Development server |
+| `npm run build` | Production build |
+| `npm start` | Migrate + seed + start (production) |
+| `npm run db:seed` | Sync demo tenants and seed empty catalogs |
+| `npm run db:studio` | Prisma Studio |
 
 ## License
 
