@@ -3,11 +3,17 @@
 import { useI18n } from "@/components/locale-provider";
 import { LOCALES } from "@/lib/i18n/translations";
 
-export function LocaleToggle({ compact }: { compact?: boolean }) {
+export function LocaleToggle({
+  compact,
+  className,
+}: {
+  compact?: boolean;
+  className?: string;
+}) {
   const { locale, setLocale, t } = useI18n();
 
   return (
-    <label className="inline-flex items-center gap-1.5 text-xs">
+    <label className={`inline-flex items-center gap-1.5 text-xs ${className ?? ""}`}>
       {!compact && (
         <span className="text-stone-500 dark:text-stone-400">{t("lang.toggle")}</span>
       )}
