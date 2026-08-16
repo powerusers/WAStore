@@ -5,9 +5,29 @@ import { useEffect } from "react";
 export function ServiceWorkerRegister() {
   useEffect(() => {
     if (!("serviceWorker" in navigator)) return;
-    navigator.serviceWorker.register("/sw.js").catch(() => {
-      // Non-fatal if registration fails (e.g. insecure context).
-    });
+
+    let reloaded = false;
+
+    navigator.serviceWorker
+      .register("/sw.js", { scope: "/", updateViaCache: "none" })
+      .then((reg) => {
+        // Check for a new service worker on every visit
+        reg.update().catch(() => {});
+      })
+      .catch(() => {});
+
+    // When a new SW takes over, reload once so users get fresh HTML/JS
+    const onControllerChange = () => {
+      if (reloaded) return;
+      reloaded = true;
+      window.location.reload();
+    };
+
+    navigator.serviceWorker.addEventListener("controllerchange", onControllerChange);
+
+    return () => {
+      navigator.serviceWorker.removeEventListener("controllerchange", onControllerChange);
+    };
   }, []);
 
   return null;

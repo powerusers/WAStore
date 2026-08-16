@@ -112,6 +112,9 @@ const messages = {
       "Tap the Share button (square with arrow) at the bottom of Safari, then choose “Add to Home Screen”.",
     "install.androidSteps":
       "Open the browser menu (⋮) and tap “Add to Home screen” or “Install app”.",
+    "update.available": "A new version is available",
+    "update.refresh": "Refresh",
+    "update.later": "Later",
     "pharmacy.disclaimerTitle": "OTC catalog + WhatsApp for everything else",
     "pharmacy.disclaimerBody":
       "This demo lists common over-the-counter items only. For other medicines, add them in delivery notes or send your prescription on WhatsApp after checkout.",
@@ -225,6 +228,9 @@ const messages = {
       "Safari में नीचे Share बटन (तीर वाला वर्ग) दबाएं, फिर “Add to Home Screen” चुनें।",
     "install.androidSteps":
       "ब्राउज़र मेनू (⋮) खोलें और “Add to Home screen” या “Install app” चुनें।",
+    "update.available": "नया संस्करण उपलब्ध है",
+    "update.refresh": "रीफ़्रेश करें",
+    "update.later": "बाद में",
     "pharmacy.disclaimerTitle": "OTC कैटलॉग + बाकी व्हाट्सऐप पर",
     "pharmacy.disclaimerBody":
       "यह डेमो केवल सामान्य OTC उत्पाद दिखाता है। अन्य दवाओं के लिए डिलीवरी नोट में लिखें या चेकआउट के बाद व्हाट्सऐप पर प्रिस्क्रिप्शन भेजें।",

@@ -65,8 +65,8 @@ export default function RootLayout({
       <body className="flex min-h-full flex-col bg-stone-100 text-stone-900 dark:bg-stone-950 dark:text-stone-50">
         <LocaleProvider>
           {children}
+          <ServiceWorkerRegister />
         </LocaleProvider>
-        <ServiceWorkerRegister />
       </body>
     </html>
   );

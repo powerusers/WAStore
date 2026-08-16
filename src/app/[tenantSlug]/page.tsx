@@ -2,7 +2,7 @@ import { StorefrontPage } from "@/components/storefront-page";
 import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 type Props = {
   params: Promise<{ tenantSlug: string }>;
