@@ -642,12 +642,10 @@
     </style>
   </head>
   <body>
-    <!--
-      DEPLOYMENT: Set your live demo URL below before publishing.
-      Replace https://YOUR-DEMO-URL.railway.app with your Railway (or custom) domain.
-    -->
+    <!-- Live app at wastore.thesmallapps.com -->
     <script>
-      const DEMO_BASE = "https://YOUR-DEMO-URL.railway.app";
+      const APP_BASE = "https://wastore.thesmallapps.com";
+      const DEMO_BASE = "https://wastore.thesmallapps.com/demo";
     </script>
 
     <header class="nav">
@@ -957,9 +955,9 @@
           </div>
 
           <div class="config-note">
-            <strong>For site owners:</strong> Before publishing, edit
-            <code>DEMO_BASE</code> at the top of this file to your live app URL (e.g.
-            <code>https://your-app.railway.app</code>). All demo links update automatically.
+            <strong>Demo URLs:</strong> Store app at
+            <code>wastore.thesmallapps.com</code> · Primary demo at
+            <code>wastore.thesmallapps.com/demo</code>
           </div>
         </div>
       </section>
@@ -980,14 +978,17 @@
 
     <script>
       (function () {
-        const base = typeof DEMO_BASE === "string" ? DEMO_BASE.replace(/\/$/, "") : "";
+        const appBase =
+          typeof APP_BASE === "string" ? APP_BASE.replace(/\/$/, "") : "";
+        const demoUrl =
+          typeof DEMO_BASE === "string" ? DEMO_BASE : appBase + "/demo";
 
         document.querySelectorAll("[data-demo]").forEach(function (el) {
-          el.href = base + el.getAttribute("data-demo");
+          el.href = appBase + el.getAttribute("data-demo");
         });
 
         document.querySelectorAll("[data-demo-link]").forEach(function (el) {
-          el.href = base || "#demo";
+          el.href = demoUrl;
         });
       })();
     </script>
