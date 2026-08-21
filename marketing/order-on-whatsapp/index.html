@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order on WhatsApp — Digital catalog for local stores | the small apps</title>
+    <meta
+      name="description"
+      content="A mobile storefront for kirana, pharmacy, and local retailers. Customers browse and cart on their phone; orders land in WhatsApp — the channel they already use."
+    />
+    <meta property="og:title" content="Order on WhatsApp — the small apps" />
+    <meta
+      property="og:description"
+      content="Simple digital catalog + WhatsApp checkout for Indian local stores."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://thesmallapps.com/products/order-on-whatsapp" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #fafaf9;
+        --surface: #ffffff;
+        --text: #1c1917;
+        --muted: #78716c;
+        --border: #e7e5e4;
+        --accent: #0f766e;
+        --accent-dark: #0d5c56;
+        --accent-soft: #ecfdf5;
+        --whatsapp: #25d366;
+        --serif: "Instrument Serif", Georgia, serif;
+        --sans: "DM Sans", system-ui, sans-serif;
+        --radius: 1rem;
+        --shadow: 0 1px 3px rgb(28 25 23 / 6%), 0 8px 24px rgb(28 25 23 / 6%);
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        font-family: var(--sans);
+        font-size: 1rem;
+        line-height: 1.6;
+        color: var(--text);
+        background: var(--bg);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .wrap {
+        width: min(1120px, calc(100% - 2rem));
+        margin-inline: auto;
+      }
+
+      /* ── Nav ── */
+      .nav {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        border-bottom: 1px solid var(--border);
+        background: rgb(250 250 249 / 92%);
+        backdrop-filter: blur(12px);
+      }
+
+      .nav-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 0.875rem 0;
+      }
+
+      .brand {
+        display: flex;
+        flex-direction: column;
+        gap: 0.1rem;
+      }
+
+      .brand-studio {
+        font-size: 0.65rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .brand-name {
+        font-size: 0.95rem;
+        font-weight: 600;
+      }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        padding: 0.65rem 1.15rem;
+        border-radius: 999px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        border: 1px solid transparent;
+        transition: transform 0.15s, background 0.15s, box-shadow 0.15s;
+        white-space: nowrap;
+      }
+
+      .btn:hover {
+        transform: translateY(-1px);
+      }
+
+      .btn-ghost {
+        background: transparent;
+        border-color: var(--border);
+        color: var(--text);
+      }
+
+      .btn-ghost:hover {
+        background: var(--surface);
+      }
+
+      .btn-primary {
+        background: var(--accent);
+        color: white;
+        box-shadow: 0 2px 8px rgb(15 118 110 / 25%);
+      }
+
+      .btn-primary:hover {
+        background: var(--accent-dark);
+      }
+
+      .btn-whatsapp {
+        background: var(--whatsapp);
+        color: white;
+      }
+
+      .btn-lg {
+        padding: 0.85rem 1.5rem;
+        font-size: 0.95rem;
+      }
+
+      /* ── Hero ── */
+      .hero {
+        padding: 4.5rem 0 3.5rem;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.35rem 0.75rem;
+        border-radius: 999px;
+        background: var(--accent-soft);
+        color: var(--accent-dark);
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        margin-bottom: 1.25rem;
+      }
+
+      .badge-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--whatsapp);
+      }
+
+      .hero-grid {
+        display: grid;
+        gap: 3rem;
+        align-items: center;
+      }
+
+      @media (min-width: 900px) {
+        .hero-grid {
+          grid-template-columns: 1.05fr 0.95fr;
+        }
+      }
+
+      h1 {
+        font-family: var(--serif);
+        font-size: clamp(2.5rem, 5vw, 3.75rem);
+        font-weight: 400;
+        line-height: 1.08;
+        letter-spacing: -0.02em;
+        margin: 0 0 1.25rem;
+      }
+
+      h1 em {
+        font-style: italic;
+        color: var(--accent);
+      }
+
+      .hero-lead {
+        font-size: 1.125rem;
+        color: var(--muted);
+        max-width: 34rem;
+        margin: 0 0 2rem;
+      }
+
+      .hero-cta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-bottom: 2rem;
+      }
+
+      .hero-proof {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+
+      .hero-proof strong {
+        display: block;
+        font-size: 1.1rem;
+        color: var(--text);
+      }
+
+      /* Phone mockup */
+      .mockup {
+        position: relative;
+        justify-self: center;
+        width: min(100%, 320px);
+      }
+
+      .mockup-shell {
+        border-radius: 2rem;
+        border: 3px solid #1c1917;
+        background: #fff;
+        overflow: hidden;
+        box-shadow: var(--shadow), 0 24px 48px rgb(28 25 23 / 12%);
+      }
+
+      .mockup-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem 1rem;
+        background: var(--accent);
+        color: white;
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+
+      .mockup-body {
+        padding: 0.75rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+        background: #f5f5f4;
+      }
+
+      .mockup-card {
+        background: white;
+        border-radius: 0.75rem;
+        padding: 0.5rem;
+        font-size: 0.65rem;
+        box-shadow: 0 1px 2px rgb(0 0 0 / 6%);
+      }
+
+      .mockup-img {
+        aspect-ratio: 1;
+        border-radius: 0.5rem;
+        background: linear-gradient(135deg, #d6d3d1, #e7e5e4);
+        margin-bottom: 0.35rem;
+      }
+
+      .mockup-price {
+        font-weight: 700;
+        color: var(--accent);
+      }
+
+      .mockup-cart {
+        grid-column: 1 / -1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.65rem 0.85rem;
+        background: var(--whatsapp);
+        color: white;
+        border-radius: 0.85rem;
+        font-size: 0.75rem;
+        font-weight: 700;
+      }
+
+      /* ── Sections ── */
+      section {
+        padding: 4rem 0;
+      }
+
+      .section-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 0.75rem;
+      }
+
+      h2 {
+        font-family: var(--serif);
+        font-size: clamp(1.85rem, 3.5vw, 2.5rem);
+        font-weight: 400;
+        line-height: 1.15;
+        margin: 0 0 1rem;
+      }
+
+      .section-intro {
+        color: var(--muted);
+        max-width: 40rem;
+        margin: 0 0 2.5rem;
+        font-size: 1.05rem;
+      }
+
+      .surface {
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+      }
+
+      /* Problem */
+      .problem-grid {
+        display: grid;
+        gap: 1rem;
+      }
+
+      @media (min-width: 700px) {
+        .problem-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      .problem-card {
+        padding: 1.5rem;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        background: var(--surface);
+      }
+
+      .problem-card.bad {
+        background: #fef2f2;
+        border-color: #fecaca;
+      }
+
+      .problem-card.good {
+        background: var(--accent-soft);
+        border-color: #99f6e4;
+      }
+
+      .problem-card h3 {
+        margin: 0 0 0.5rem;
+        font-size: 1rem;
+      }
+
+      .problem-card p {
+        margin: 0;
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
+
+      /* Steps */
+      .steps {
+        display: grid;
+        gap: 1.25rem;
+      }
+
+      @media (min-width: 800px) {
+        .steps {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      .step {
+        padding: 1.5rem;
+        border-radius: var(--radius);
+        background: var(--surface);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+      }
+
+      .step-num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+        background: var(--accent);
+        color: white;
+        font-size: 0.8rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+      }
+
+      .step h3 {
+        margin: 0 0 0.5rem;
+        font-size: 1.05rem;
+      }
+
+      .step p {
+        margin: 0;
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
+
+      /* Features */
+      .features {
+        display: grid;
+        gap: 1rem;
+      }
+
+      @media (min-width: 600px) {
+        .features {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (min-width: 900px) {
+        .features {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      .feature {
+        padding: 1.25rem;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        background: var(--bg);
+      }
+
+      .feature-icon {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .feature h3 {
+        margin: 0 0 0.35rem;
+        font-size: 0.95rem;
+      }
+
+      .feature p {
+        margin: 0;
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+
+      /* Demos */
+      .demos {
+        display: grid;
+        gap: 1rem;
+      }
+
+      @media (min-width: 700px) {
+        .demos {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      .demo-card {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        padding: 1.25rem;
+        border-radius: var(--radius);
+        border: 2px solid var(--border);
+        background: var(--surface);
+        transition: border-color 0.15s, transform 0.15s;
+      }
+
+      .demo-card:hover {
+        transform: translateY(-2px);
+        border-color: var(--accent);
+      }
+
+      .demo-tag {
+        display: inline-block;
+        padding: 0.2rem 0.55rem;
+        border-radius: 999px;
+        font-size: 0.65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: white;
+        width: fit-content;
+      }
+
+      .demo-card h3 {
+        margin: 0;
+        font-size: 1.05rem;
+      }
+
+      .demo-card p {
+        margin: 0;
+        flex: 1;
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+
+      .demo-link {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--accent);
+      }
+
+      /* Four tests */
+      .tests {
+        display: grid;
+        gap: 1rem;
+      }
+
+      @media (min-width: 700px) {
+        .tests {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      .test {
+        padding: 1.25rem 1.25rem 1.25rem 1rem;
+        border-left: 3px solid var(--accent);
+        background: var(--surface);
+        border-radius: 0 var(--radius) var(--radius) 0;
+      }
+
+      .test h3 {
+        margin: 0 0 0.35rem;
+        font-size: 0.95rem;
+      }
+
+      .test p {
+        margin: 0;
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+
+      /* CTA */
+      .cta {
+        text-align: center;
+        padding: 4.5rem 0;
+      }
+
+      .cta-box {
+        padding: 3rem 2rem;
+        border-radius: 1.5rem;
+        background: linear-gradient(135deg, #0f766e 0%, #134e4a 100%);
+        color: white;
+      }
+
+      .cta-box h2 {
+        color: white;
+        margin-bottom: 0.75rem;
+      }
+
+      .cta-box p {
+        color: rgb(255 255 255 / 85%);
+        max-width: 32rem;
+        margin: 0 auto 1.75rem;
+      }
+
+      .cta-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.75rem;
+      }
+
+      .cta .btn-ghost {
+        border-color: rgb(255 255 255 / 35%);
+        color: white;
+        background: rgb(255 255 255 / 10%);
+      }
+
+      .cta .btn-primary {
+        background: white;
+        color: var(--accent-dark);
+      }
+
+      /* Footer */
+      footer {
+        padding: 2rem 0 3rem;
+        border-top: 1px solid var(--border);
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+
+      .footer-inner {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+
+      .footer-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.25rem;
+      }
+
+      .footer-links a:hover {
+        color: var(--text);
+      }
+
+      .config-note {
+        margin-top: 3rem;
+        padding: 1rem;
+        border-radius: var(--radius);
+        background: #fffbeb;
+        border: 1px solid #fde68a;
+        font-size: 0.8rem;
+        color: #92400e;
+      }
+
+      .config-note code {
+        background: rgb(0 0 0 / 6%);
+        padding: 0.1rem 0.35rem;
+        border-radius: 0.25rem;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Live app at wastore.thesmallapps.com -->
+    <script>
+      const APP_BASE = "https://wastore.thesmallapps.com";
+      const DEMO_BASE = "https://wastore.thesmallapps.com/demo";
+    </script>
+
+    <header class="nav">
+      <div class="wrap nav-inner">
+        <a href="https://thesmallapps.com" class="brand">
+          <span class="brand-studio">the small apps · Product</span>
+          <span class="brand-name">Order on WhatsApp</span>
+        </a>
+        <div class="nav-actions">
+          <a href="https://thesmallapps.com" class="btn btn-ghost">← All products</a>
+          <a href="#demo" class="btn btn-primary" data-demo-link>Try live demo</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- Hero -->
+      <section class="hero">
+        <div class="wrap hero-grid">
+          <div>
+            <div class="badge"><span class="badge-dot"></span> Pilot ready</div>
+            <h1>Your store catalog.<br /><em>Their WhatsApp.</em></h1>
+            <p class="hero-lead">
+              A mobile-first storefront for kirana shops, pharmacies, and local retailers.
+              Customers browse and add to cart on their phone — the order opens in WhatsApp,
+              ready to send. No new app for them to learn.
+            </p>
+            <div class="hero-cta">
+              <a href="#demo" class="btn btn-primary btn-lg" data-demo-link>Try live demo</a>
+              <a href="https://thesmallapps.com/#contact" class="btn btn-ghost btn-lg"
+                >Talk to us</a
+              >
+            </div>
+            <div class="hero-proof">
+              <div><strong>3</strong> demo store types</div>
+              <div><strong>हिं / EN</strong> bilingual UI</div>
+              <div><strong>0</strong> payment gateway needed</div>
+            </div>
+          </div>
+
+          <div class="mockup" aria-hidden="true">
+            <div class="mockup-shell">
+              <div class="mockup-bar">
+                <span>Demo Kirana</span>
+                <span>🛒 3</span>
+              </div>
+              <div class="mockup-body">
+                <div class="mockup-card">
+                  <div class="mockup-img"></div>
+                  Basmati Rice 5kg
+                  <div class="mockup-price">₹649</div>
+                </div>
+                <div class="mockup-card">
+                  <div class="mockup-img"></div>
+                  Toor Dal 1kg
+                  <div class="mockup-price">₹149</div>
+                </div>
+                <div class="mockup-card">
+                  <div class="mockup-img"></div>
+                  Sunflower Oil
+                  <div class="mockup-price">₹189</div>
+                </div>
+                <div class="mockup-card">
+                  <div class="mockup-img"></div>
+                  Parle-G
+                  <div class="mockup-price">₹25</div>
+                </div>
+                <div class="mockup-cart">
+                  <span>Order on WhatsApp →</span>
+                  <span>₹1,012</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Problem -->
+      <section class="surface">
+        <div class="wrap">
+          <p class="section-label">The problem</p>
+          <h2>WhatsApp orders work — until the list gets long.</h2>
+          <p class="section-intro">
+            Your customers already message you on WhatsApp. But typing "2kg atta, 1 dal, 3
+            Maggi…" back and forth is slow for them and painful for you.
+          </p>
+          <div class="problem-grid">
+            <div class="problem-card bad">
+              <h3>Without a catalog</h3>
+              <p>
+                Long text lists, voice notes, missed items, price confusion, and no record of
+                what was ordered until you scroll the chat.
+              </p>
+            </div>
+            <div class="problem-card good">
+              <h3>With Order on WhatsApp</h3>
+              <p>
+                Share one link. They browse, search, and cart. Checkout opens WhatsApp with a
+                formatted order — name, phone, address, and line items included.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- How it works -->
+      <section>
+        <div class="wrap">
+          <p class="section-label">How it works</p>
+          <h2>Three steps. Familiar channel.</h2>
+          <p class="section-intro">
+            Built for how Indian local stores actually sell — not for replacing WhatsApp, but
+            for making it smoother.
+          </p>
+          <div class="steps">
+            <div class="step">
+              <div class="step-num">1</div>
+              <h3>Share your store link</h3>
+              <p>
+                Put it on WhatsApp status, print a QR code, or send it in your broadcast list.
+                Each store gets its own URL and branding.
+              </p>
+            </div>
+            <div class="step">
+              <div class="step-num">2</div>
+              <h3>Customer browses & carts</h3>
+              <p>
+                Mobile catalog with search, categories, and cart. Works in English or Hindi.
+                They can install it to their home screen like an app.
+              </p>
+            </div>
+            <div class="step">
+              <div class="step-num">3</div>
+              <h3>Order lands in WhatsApp</h3>
+              <p>
+                One tap opens WhatsApp with the full order pre-filled. You confirm, deliver,
+                and update status — customer can track with order ID + phone.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Features -->
+      <section class="surface">
+        <div class="wrap">
+          <p class="section-label">What's included</p>
+          <h2>Everything a pilot store needs.</h2>
+          <p class="section-intro">
+            Focused capabilities — not a bloated ERP. Each feature supports the one workflow:
+            browse → cart → WhatsApp.
+          </p>
+          <div class="features">
+            <div class="feature">
+              <div class="feature-icon">📱</div>
+              <h3>Mobile catalog</h3>
+              <p>Search, categories, popular picks, and cart drawer optimised for phones.</p>
+            </div>
+            <div class="feature">
+              <div class="feature-icon">💬</div>
+              <h3>WhatsApp checkout</h3>
+              <p>Formatted order with customer details — send to your store number in one tap.</p>
+            </div>
+            <div class="feature">
+              <div class="feature-icon">🎨</div>
+              <h3>Your branding</h3>
+              <p>Custom colour, tagline, and hero copy per store. Looks like yours, not ours.</p>
+            </div>
+            <div class="feature">
+              <div class="feature-icon">🇮🇳</div>
+              <h3>Hindi & English</h3>
+              <p>Language toggle across the storefront — built for local customers.</p>
+            </div>
+            <div class="feature">
+              <div class="feature-icon">📦</div>
+              <h3>Admin panel</h3>
+              <p>Manage products, stock, and order status from a simple back office.</p>
+            </div>
+            <div class="feature">
+              <div class="feature-icon">💊</div>
+              <h3>Pharmacy mode</h3>
+              <p>OTC catalog + prescription notes for medical stores. WhatsApp for everything else.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Demos -->
+      <section id="demo">
+        <div class="wrap">
+          <p class="section-label">Live demos</p>
+          <h2>Try it yourself.</h2>
+          <p class="section-intro">
+            Three working demo stores — add items to cart and go through checkout (opens WhatsApp).
+          </p>
+          <div class="demos">
+            <a href="#" class="demo-card" data-demo="/demo">
+              <span class="demo-tag" style="background: #0f766e">Kirana</span>
+              <h3>Demo Kirana</h3>
+              <p>65+ grocery items — rice, dal, snacks, daily essentials.</p>
+              <span class="demo-link">Open demo →</span>
+            </a>
+            <a href="#" class="demo-card" data-demo="/purti">
+              <span class="demo-tag" style="background: #7c3aed">Supermarket</span>
+              <h3>Purti Supermarket</h3>
+              <p>30 products with violet branding — second store example.</p>
+              <span class="demo-link">Open demo →</span>
+            </a>
+            <a href="#" class="demo-card" data-demo="/healthplus">
+              <span class="demo-tag" style="background: #0284c7">Pharmacy</span>
+              <h3>HealthPlus Medical</h3>
+              <p>30 OTC medicines — pharmacy categories and Rx guidance.</p>
+              <span class="demo-link">Open demo →</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Four tests -->
+      <section class="surface">
+        <div class="wrap">
+          <p class="section-label">Our standard</p>
+          <h2>Passes the four tests.</h2>
+          <p class="section-intro">
+            Every product from the small apps has to earn its place — Order on WhatsApp is no
+            exception.
+          </p>
+          <div class="tests">
+            <div class="test">
+              <h3>Solves one real problem</h3>
+              <p>
+                Messy WhatsApp ordering for local stores. Not inventory, accounting, and HR in
+                one giant app.
+              </p>
+            </div>
+            <div class="test">
+              <h3>Works from day one</h3>
+              <p>
+                Share a link, customer orders. No training manual, no POS hardware, no payment
+                gateway setup.
+              </p>
+            </div>
+            <div class="test">
+              <h3>Priced for your size</h3>
+              <p>
+                Built for kirana and neighbourhood stores — not enterprise retail chains with
+                six-figure software budgets.
+              </p>
+            </div>
+            <div class="test">
+              <h3>Turns work into insight</h3>
+              <p>
+                Orders saved with status tracking. See what's selling and follow up on WhatsApp
+                with context.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Who -->
+      <section>
+        <div class="wrap">
+          <p class="section-label">Who it's for</p>
+          <h2>Local stores that already sell on WhatsApp.</h2>
+          <p class="section-intro">
+            If your customers message you "bhai 2kg atta bhej do" — this is for you. Especially
+            strong for stores doing 20–200 orders a week over WhatsApp.
+          </p>
+          <div class="features">
+            <div class="feature">
+              <div class="feature-icon">🏪</div>
+              <h3>Kirana & general stores</h3>
+              <p>Daily staples, snacks, household items — the full neighbourhood catalog.</p>
+            </div>
+            <div class="feature">
+              <div class="feature-icon">🛒</div>
+              <h3>Mini supermarkets</h3>
+              <p>Larger catalog, branded experience, same WhatsApp checkout flow.</p>
+            </div>
+            <div class="feature">
+              <div class="feature-icon">💊</div>
+              <h3>Medical stores</h3>
+              <p>OTC fast movers in catalog; prescriptions and other items via WhatsApp notes.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <section class="cta">
+        <div class="wrap">
+          <div class="cta-box">
+            <h2>Ready to pilot with your store?</h2>
+            <p>
+              We're onboarding a small number of kirana and local retail stores. Try the demos
+              first, then get in touch — we'll set up your catalog and WhatsApp number.
+            </p>
+            <div class="cta-actions">
+              <a href="#demo" class="btn btn-primary btn-lg" data-demo-link>Try live demo</a>
+              <a
+                href="https://thesmallapps.com/#contact"
+                class="btn btn-ghost btn-lg"
+                >Contact us</a
+              >
+            </div>
+          </div>
+
+          <div class="config-note">
+            <strong>Demo URLs:</strong> Store app at
+            <code>wastore.thesmallapps.com</code> · Primary demo at
+            <code>wastore.thesmallapps.com/demo</code>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap footer-inner">
+        <div>
+          <strong style="color: var(--text)">the small apps</strong> · Order on WhatsApp
+        </div>
+        <div class="footer-links">
+          <a href="https://thesmallapps.com">Home</a>
+          <a href="https://thesmallapps.com/#contact">Contact</a>
+          <a href="#demo" data-demo-link>Live demo</a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      (function () {
+        const appBase =
+          typeof APP_BASE === "string" ? APP_BASE.replace(/\/$/, "") : "";
+        const demoUrl =
+          typeof DEMO_BASE === "string" ? DEMO_BASE : appBase + "/demo";
+
+        document.querySelectorAll("[data-demo]").forEach(function (el) {
+          el.href = appBase + el.getAttribute("data-demo");
+        });
+
+        document.querySelectorAll("[data-demo-link]").forEach(function (el) {
+          el.href = demoUrl;
+        });
+      })();
+    </script>
+  </body>
+</html>
